@@ -199,10 +199,10 @@ export default function RitualPreview() {
               transition={{ delay: 0.5, duration: 0.5 }}
             >
               <p className="text-arcana-gold text-sm font-light tracking-wider">
-                The Star
+                星星
               </p>
               <p className="text-arcana-gray text-xs mt-1">
-                Hope and inspiration await
+                希望与灵感正在等待你
               </p>
             </motion.div>
           )}
@@ -228,7 +228,7 @@ export default function RitualPreview() {
                 opacity="0.5"
               />
             </svg>
-            <p className="text-arcana-gray-dark text-sm">Tap to experience the ritual</p>
+            <p className="text-arcana-gray-dark text-sm">点击体验仪式</p>
           </div>
         )}
       </motion.div>
@@ -241,7 +241,7 @@ export default function RitualPreview() {
         whileHover={{ scale: isPlaying ? 1 : 1.02 }}
         whileTap={{ scale: isPlaying ? 1 : 0.98 }}
       >
-        {isPlaying ? 'Drawing...' : 'Begin Ritual Draw'}
+        {isPlaying ? '抽牌中...' : '开始仪式抽牌'}
       </motion.button>
     </div>
   );

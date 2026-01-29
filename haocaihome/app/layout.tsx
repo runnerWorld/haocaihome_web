@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Rainbow Arcana - A rainbow alert. A tarot sign. A gentle action for today.",
-  description: "Receive a rainbow alert, open the app, perform a ritual draw animation, and get a short reading with an action tip. Premium mystical tarot experience.",
+  title: "彩虹奥秘 - 一道彩虹提醒，一张塔罗启示，今日一个温柔的行动",
+  description: "收到彩虹提醒，打开应用，体验仪式抽牌动画，获取简短解读与行动建议。高级神秘塔罗体验。",
 };
 
 export default function RootLayout({
@@ -23,7 +23,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="zh-CN">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
