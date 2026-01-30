@@ -370,7 +370,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ========== PRICING ========== */}
+      {/* ========== PRICING (COMMENTED OUT) ==========
       <section className="relative px-6 py-20 md:py-32">
         <GlowOrb size="sm" className="top-0 left-1/4" intensity="low" />
 
@@ -381,7 +381,6 @@ export default function Home() {
           />
 
           <div className="grid md:grid-cols-2 gap-6 max-w-3xl mx-auto">
-            {/* Free Tier */}
             <motion.div
               className="p-8 rounded-xl border border-arcana-gold/10 bg-arcana-charcoal-light/30"
               initial={{ opacity: 0, y: 30 }}
@@ -417,7 +416,6 @@ export default function Home() {
               </button>
             </motion.div>
 
-            {/* Premium Tier */}
             <motion.div
               className="p-8 rounded-xl border border-arcana-gold/40 bg-arcana-charcoal-light/50 relative overflow-hidden"
               initial={{ opacity: 0, y: 30 }}
@@ -425,7 +423,6 @@ export default function Home() {
               viewport={{ once: true, margin: '-50px' }}
               transition={{ duration: 0.6, delay: 0.1 }}
             >
-              {/* Premium badge */}
               <div className="absolute top-4 right-4 px-3 py-1 rounded-full bg-arcana-gold/10 border border-arcana-gold/30 text-arcana-gold text-xs">
                 热门选择
               </div>
@@ -462,6 +459,7 @@ export default function Home() {
           </div>
         </div>
       </section>
+      ========== */}
 
       {/* ========== FAQ ========== */}
       <section className="relative px-6 py-20 md:py-32 bg-arcana-charcoal-light/30">
