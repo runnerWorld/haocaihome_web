@@ -544,6 +544,9 @@ export default function Home() {
               © 2025 彩虹奥秘 版权所有
             </p>
           </div>
+          <p className="mt-4 text-xs text-arcana-gray-dark text-center">
+            桂ICP备2025071572号
+          </p>
         </div>
       </footer>
     </div>
