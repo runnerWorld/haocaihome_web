@@ -535,8 +535,8 @@ export default function Home() {
             </div>
 
             <div className="flex items-center gap-6 text-sm text-arcana-gray">
-              <a href="#" className="hover:text-arcana-cream transition-colors">隐私政策</a>
-              <a href="#" className="hover:text-arcana-cream transition-colors">服务条款</a>
+              <a href="/privacy" className="hover:text-arcana-cream transition-colors">隐私政策</a>
+              <a href="/terms" className="hover:text-arcana-cream transition-colors">服务条款</a>
               <a href="#" className="hover:text-arcana-cream transition-colors">联系我们</a>
             </div>
 

@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo } from 'react';
+import { useEffect, useState } from 'react';
 
 interface Star {
   id: number;
@@ -12,8 +12,11 @@ interface Star {
 }
 
 export default function StarField({ count = 15 }: { count?: number }) {
-  const stars = useMemo<Star[]>(() => {
-    return Array.from({ length: count }, (_, i) => ({
+  const [stars, setStars] = useState<Star[]>([]);
+
+  // Generate stars only on the client to avoid SSR/CSR mismatches from Math.random.
+  useEffect(() => {
+    const generated = Array.from({ length: count }, (_, i) => ({
       id: i,
       x: Math.random() * 100,
       y: Math.random() * 100,
@@ -21,6 +24,7 @@ export default function StarField({ count = 15 }: { count?: number }) {
       delay: Math.random() * 5,
       duration: Math.random() * 3 + 2,
     }));
+    setStars(generated);
   }, [count]);
 
   return (
