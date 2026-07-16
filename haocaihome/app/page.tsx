@@ -47,6 +47,9 @@ const navItems = [
   { label: '在线 Shop', href: '#shop' },
 ];
 
+const appStoreUrl = 'https://apps.apple.com/app/id6759077138';
+const appStoreNativeUrl = 'itms-apps://itunes.apple.com/app/id6759077138';
+
 const featureCards = [
   {
     title: '彩虹心情',
@@ -136,6 +139,26 @@ const PillButton = ({ children, href, primary = false }: { children: React.React
   </a>
 );
 
+const openAppStore = (event: React.MouseEvent<HTMLAnchorElement>) => {
+  if (typeof navigator === 'undefined') return;
+
+  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+  if (!isIOS) return;
+
+  event.preventDefault();
+  window.location.href = appStoreNativeUrl;
+};
+
+const DownloadPillButton = ({ children }: { children: React.ReactNode }) => (
+  <a
+    href={appStoreUrl}
+    onClick={openAppStore}
+    className="inline-flex h-12 items-center justify-center rounded-full border border-arcana-gold/50 bg-arcana-charcoal-light px-6 text-sm font-semibold text-arcana-cream shadow-lg shadow-arcana-gold/10 transition-all hover:border-arcana-gold"
+  >
+    {children}
+  </a>
+);
+
 export default function Home() {
   return (
     <div className="relative min-h-screen overflow-hidden bg-arcana-charcoal text-arcana-cream grain-overlay vignette-overlay">
@@ -158,7 +181,7 @@ export default function Home() {
             ))}
           </div>
 
-          <a href="#download" className="rounded-full bg-arcana-gold px-4 py-2 text-sm font-semibold text-white shadow-md shadow-arcana-gold/20">
+          <a href={appStoreUrl} onClick={openAppStore} className="rounded-full bg-arcana-gold px-4 py-2 text-sm font-semibold text-white shadow-md shadow-arcana-gold/20">
             下载 App
           </a>
         </nav>
@@ -190,7 +213,7 @@ export default function Home() {
               </p>
 
               <div className="flex flex-col justify-center gap-3 sm:flex-row lg:justify-start">
-                <PillButton href="#download" primary>下载 App</PillButton>
+                <DownloadPillButton>下载 App</DownloadPillButton>
                 <PillButton href="#rainbow-mood">查看功能</PillButton>
               </div>
             </motion.div>
@@ -492,7 +515,7 @@ export default function Home() {
             <p className="mx-auto mb-8 max-w-md text-base leading-relaxed text-arcana-gray">
               彩虹奥秘把天气、心情、人格、塔罗和 AI 对话放在一个安静的日常仪式里。
             </p>
-            <PillButton href="#" primary>下载 App</PillButton>
+            <DownloadPillButton>下载 App</DownloadPillButton>
           </div>
         </section>
       </main>
@@ -520,7 +543,7 @@ export default function Home() {
       </footer>
 
       <div className="fixed bottom-4 left-4 right-4 z-40 md:hidden">
-        <a href="#download" className="flex h-12 items-center justify-center rounded-full bg-arcana-gold text-sm font-semibold text-white shadow-lg shadow-arcana-gold/25">
+        <a href={appStoreUrl} onClick={openAppStore} className="flex h-12 items-center justify-center rounded-full bg-arcana-gold text-sm font-semibold text-white shadow-lg shadow-arcana-gold/25">
           下载 App
         </a>
       </div>
