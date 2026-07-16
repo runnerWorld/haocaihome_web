@@ -1,16 +1,16 @@
 @import "tailwindcss";
 
 :root {
-  --arcana-charcoal: #0a0a0c;
-  --arcana-charcoal-light: #141418;
-  --arcana-gold: #b8956e;
-  --arcana-gold-muted: #8a7254;
-  --arcana-gold-bright: #d4a96a;
-  --arcana-cream: #f5f3ef;
-  --arcana-gray: #a8a49e;
-  --arcana-gray-dark: #5a5752;
-  --background: #0a0a0c;
-  --foreground: #f5f3ef;
+  --arcana-charcoal: #f8f6f1;
+  --arcana-charcoal-light: #fffdf9;
+  --arcana-gold: #ff8f61;
+  --arcana-gold-muted: #a3d3f9;
+  --arcana-gold-bright: #fdc7d0;
+  --arcana-cream: #2a2a2a;
+  --arcana-gray: #4a4a4a;
+  --arcana-gray-dark: #7a7d92;
+  --background: #f8f6f1;
+  --foreground: #2a2a2a;
 }
 
 @theme inline {
@@ -34,6 +34,11 @@ body {
   font-family: var(--font-sans), Arial, Helvetica, sans-serif;
 }
 
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
+}
+
 /* Grain overlay */
 .grain-overlay::before {
   content: '';
@@ -44,7 +49,7 @@ body {
   height: 100%;
   pointer-events: none;
   z-index: 9999;
-  opacity: 0.035;
+  opacity: 0.018;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
 }
 
@@ -58,7 +63,10 @@ body {
   height: 100%;
   pointer-events: none;
   z-index: 1;
-  background: radial-gradient(ellipse at center, transparent 0%, transparent 40%, rgba(0, 0, 0, 0.5) 100%);
+  background:
+    radial-gradient(ellipse at 18% 8%, rgba(253, 199, 208, 0.42), transparent 34%),
+    radial-gradient(ellipse at 88% 16%, rgba(163, 211, 249, 0.38), transparent 34%),
+    radial-gradient(ellipse at 50% 100%, rgba(255, 143, 97, 0.16), transparent 42%);
 }
 
 /* Star twinkle animation */
@@ -94,22 +102,36 @@ body {
 
 /* Gold glow */
 .gold-glow {
-  box-shadow: 0 0 40px rgba(184, 149, 110, 0.3), 0 0 80px rgba(184, 149, 110, 0.1);
+  box-shadow: 0 18px 48px rgba(255, 143, 97, 0.16), 0 8px 20px rgba(42, 42, 42, 0.08);
 }
 
 .gold-glow-intense {
-  box-shadow: 0 0 60px rgba(184, 149, 110, 0.5), 0 0 120px rgba(184, 149, 110, 0.2);
+  box-shadow: 0 24px 70px rgba(255, 143, 97, 0.22), 0 10px 24px rgba(42, 42, 42, 0.1);
 }
 
 /* Card hover glow */
 .card-hover-glow {
-  transition: all 0.4s ease;
+  box-shadow: 0 8px 20px rgba(42, 42, 42, 0.08), 0 18px 46px rgba(122, 125, 146, 0.08);
+  backdrop-filter: blur(24px);
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
 }
 
 .card-hover-glow:hover {
   transform: translateY(-4px);
-  box-shadow: 0 0 30px rgba(184, 149, 110, 0.15), 0 0 60px rgba(184, 149, 110, 0.05);
-  border-color: rgba(184, 149, 110, 0.4);
+  box-shadow: 0 24px 58px rgba(42, 42, 42, 0.12);
+  border-color: rgba(255, 143, 97, 0.28);
+}
+
+.ios-glass {
+  background: linear-gradient(135deg, rgba(255, 253, 249, 0.92), rgba(248, 246, 241, 0.86));
+  border: 1px solid rgba(255, 143, 97, 0.18);
+  box-shadow: 0 18px 44px rgba(42, 42, 42, 0.09);
+  backdrop-filter: blur(28px);
+}
+
+.ios-phone {
+  border: 10px solid #2a2a2a;
+  box-shadow: 0 28px 80px rgba(42, 42, 42, 0.2);
 }
 
 /* Scroll behavior */

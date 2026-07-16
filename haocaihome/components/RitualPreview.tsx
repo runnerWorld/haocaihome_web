@@ -36,9 +36,9 @@ export default function RitualPreview() {
     <div className="relative w-full max-w-md mx-auto">
       {/* Preview Container */}
       <motion.div
-        className="relative aspect-[4/3] rounded-2xl overflow-hidden border border-arcana-gold/20"
+        className="relative aspect-[4/3] rounded-[1.5rem] overflow-hidden border border-arcana-gold/20 shadow-xl"
         style={{
-          background: 'linear-gradient(180deg, #0a0a0c 0%, #141418 100%)',
+          background: 'linear-gradient(135deg, #FFFDF9 0%, #F8F6F1 48%, #E8D6F4 100%)',
         }}
       >
         {/* Darkening overlay */}
@@ -59,7 +59,7 @@ export default function RitualPreview() {
           <motion.div
             className="w-32 h-32 rounded-full"
             style={{
-              background: 'radial-gradient(circle, rgba(184, 149, 110, 0.2) 0%, transparent 70%)',
+              background: 'radial-gradient(circle, rgba(255, 143, 97, 0.24) 0%, rgba(253, 199, 208, 0.16) 45%, transparent 70%)',
             }}
             animate={{
               scale: phase === 'darken' || phase === 'flare' ? 1.5 : 1,
@@ -82,9 +82,9 @@ export default function RitualPreview() {
             >
               <defs>
                 <linearGradient id="flareGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                  <stop offset="0%" stopColor="#d4a96a" stopOpacity="0" />
-                  <stop offset="50%" stopColor="#d4a96a" stopOpacity="1" />
-                  <stop offset="100%" stopColor="#d4a96a" stopOpacity="0" />
+                  <stop offset="0%" stopColor="#FF8F61" stopOpacity="0" />
+                  <stop offset="50%" stopColor="#FF8F61" stopOpacity="1" />
+                  <stop offset="100%" stopColor="#FDC7D0" stopOpacity="0" />
                 </linearGradient>
               </defs>
               <circle
@@ -95,7 +95,7 @@ export default function RitualPreview() {
                 stroke="url(#flareGradient)"
                 strokeWidth="3"
                 strokeDasharray="100 200"
-                style={{ filter: 'drop-shadow(0 0 10px rgba(212, 169, 106, 0.8))' }}
+                style={{ filter: 'drop-shadow(0 0 10px rgba(255, 143, 97, 0.72))' }}
               />
             </motion.svg>
           )}
@@ -119,8 +119,8 @@ export default function RitualPreview() {
               <div
                 className="w-20 h-32 rounded-lg border-2 border-arcana-gold flex items-center justify-center"
                 style={{
-                  background: 'linear-gradient(180deg, #1a1a1e 0%, #0a0a0c 100%)',
-                  boxShadow: '0 0 40px rgba(184, 149, 110, 0.4)',
+                  background: 'linear-gradient(180deg, #FFFDF9 0%, #E8D6F4 100%)',
+                  boxShadow: '0 18px 42px rgba(255, 143, 97, 0.24)',
                 }}
               >
                 {phase === 'reveal' && (
@@ -133,7 +133,7 @@ export default function RitualPreview() {
                   >
                     <path
                       d="M20 4L23 15L34 15L25 22L28 33L20 26L12 33L15 22L6 15L17 15Z"
-                      fill="#b8956e"
+                      fill="#FF8F61"
                     />
                   </motion.svg>
                 )}
@@ -219,12 +219,12 @@ export default function RitualPreview() {
                 height="70"
                 rx="4"
                 fill="none"
-                stroke="#b8956e"
+                stroke="#FF8F61"
                 strokeWidth="1.5"
               />
               <path
                 d="M30 25L33 35L43 35L35 42L38 52L30 46L22 52L25 42L17 35L27 35Z"
-                fill="#b8956e"
+                fill="#FF8F61"
                 opacity="0.5"
               />
             </svg>
