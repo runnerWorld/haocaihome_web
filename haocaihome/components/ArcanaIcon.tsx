@@ -13,13 +13,13 @@ export default function ArcanaIcon({ className = '' }: ArcanaIconProps) {
       <motion.svg
         viewBox="0 0 200 200"
         className="w-full h-full absolute animate-halo"
-        style={{ filter: 'drop-shadow(0 0 20px rgba(184, 149, 110, 0.4))' }}
+        style={{ filter: 'drop-shadow(0 0 20px rgba(255, 143, 97, 0.32))' }}
       >
         <defs>
           <linearGradient id="haloGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#d4a96a" stopOpacity="0.8" />
-            <stop offset="50%" stopColor="#b8956e" stopOpacity="0.4" />
-            <stop offset="100%" stopColor="#8a7254" stopOpacity="0.1" />
+            <stop offset="0%" stopColor="#A3D3F9" stopOpacity="0.85" />
+            <stop offset="50%" stopColor="#FF8F61" stopOpacity="0.5" />
+            <stop offset="100%" stopColor="#FDC7D0" stopOpacity="0.16" />
           </linearGradient>
         </defs>
         <circle
@@ -43,8 +43,8 @@ export default function ArcanaIcon({ className = '' }: ArcanaIconProps) {
       >
         <defs>
           <linearGradient id="starGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#d4a96a" />
-            <stop offset="100%" stopColor="#8a7254" />
+            <stop offset="0%" stopColor="#FF8F61" />
+            <stop offset="100%" stopColor="#FDC7D0" />
           </linearGradient>
         </defs>
         <path
@@ -66,8 +66,8 @@ export default function ArcanaIcon({ className = '' }: ArcanaIconProps) {
       >
         <defs>
           <linearGradient id="cardGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" stopColor="#1a1a1e" />
-            <stop offset="100%" stopColor="#0a0a0c" />
+            <stop offset="0%" stopColor="#FFFDF9" />
+            <stop offset="100%" stopColor="#E8D6F4" />
           </linearGradient>
         </defs>
         <rect
@@ -77,7 +77,7 @@ export default function ArcanaIcon({ className = '' }: ArcanaIconProps) {
           height="90"
           rx="4"
           fill="url(#cardGradient)"
-          stroke="#b8956e"
+          stroke="#FF8F61"
           strokeWidth="1.5"
           opacity="0.9"
         />
@@ -89,14 +89,14 @@ export default function ArcanaIcon({ className = '' }: ArcanaIconProps) {
           height="78"
           rx="2"
           fill="none"
-          stroke="#b8956e"
+          stroke="#FF8F61"
           strokeWidth="0.5"
           opacity="0.4"
         />
         {/* Small star on card */}
         <path
           d="M100 85 L103 95 L113 95 L105 102 L108 112 L100 106 L92 112 L95 102 L87 95 L97 95 Z"
-          fill="#b8956e"
+          fill="#FF8F61"
           opacity="0.6"
         />
       </motion.svg>
@@ -117,7 +117,7 @@ export default function ArcanaIcon({ className = '' }: ArcanaIconProps) {
         <div
           className="w-16 h-16 rounded-full"
           style={{
-            background: 'radial-gradient(circle, rgba(184, 149, 110, 0.3) 0%, transparent 70%)',
+            background: 'radial-gradient(circle, rgba(255, 143, 97, 0.26) 0%, rgba(253, 199, 208, 0.15) 42%, transparent 70%)',
           }}
         />
       </motion.div>

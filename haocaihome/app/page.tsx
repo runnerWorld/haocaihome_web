@@ -31,13 +31,6 @@ const SparkleIcon = () => (
   </svg>
 );
 
-const CardIcon = () => (
-  <svg viewBox="0 0 24 24" className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="1.5">
-    <rect x="5" y="3" width="14" height="18" rx="2" />
-    <path d="M12 8L13 11L16 11L13.5 13L14.5 16L12 14L9.5 16L10.5 13L8 11L11 11L12 8Z" />
-  </svg>
-);
-
 const EyeIcon = () => (
   <svg viewBox="0 0 24 24" className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="1.5">
     <path d="M2 12C2 12 5 5 12 5C19 5 22 12 22 12C22 12 19 19 12 19C5 19 2 12 2 12Z" />
@@ -54,9 +47,23 @@ const ShareIcon = () => (
   </svg>
 );
 
-const CheckIcon = () => (
-  <svg viewBox="0 0 24 24" className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2">
-    <path d="M5 12L10 17L19 8" strokeLinecap="round" strokeLinejoin="round" />
+const BraceletIcon = () => (
+  <svg viewBox="0 0 24 24" className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="1.7">
+    <circle cx="12" cy="12" r="7" />
+    <circle cx="12" cy="5" r="1.6" fill="currentColor" stroke="none" />
+    <circle cx="18.1" cy="8.5" r="1.4" fill="currentColor" stroke="none" />
+    <circle cx="18.1" cy="15.5" r="1.4" fill="currentColor" stroke="none" />
+    <circle cx="12" cy="19" r="1.6" fill="currentColor" stroke="none" />
+    <circle cx="5.9" cy="15.5" r="1.4" fill="currentColor" stroke="none" />
+    <circle cx="5.9" cy="8.5" r="1.4" fill="currentColor" stroke="none" />
+  </svg>
+);
+
+const WindIcon = () => (
+  <svg viewBox="0 0 24 24" className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="1.7">
+    <path d="M4 8H15.5C17.4 8 18.5 6.9 18.5 5.5C18.5 4.3 17.6 3.5 16.5 3.5C15.4 3.5 14.7 4.1 14.3 5" strokeLinecap="round" />
+    <path d="M4 12H19" strokeLinecap="round" />
+    <path d="M4 16H14.5C16.4 16 17.5 17.1 17.5 18.5C17.5 19.7 16.6 20.5 15.5 20.5C14.4 20.5 13.7 19.9 13.3 19" strokeLinecap="round" />
   </svg>
 );
 
@@ -103,14 +110,41 @@ const testimonials = [
   },
 ];
 
+const shopProducts = [
+  {
+    name: '幸运手环',
+    tag: '今日推荐',
+    price: '¥68',
+    description: '搭配今日牌面能量，作为随身提醒与祝福物。',
+    accent: 'from-[#FF8F61] to-[#FDC7D0]',
+    icon: <BraceletIcon />,
+  },
+  {
+    name: '转运净化包',
+    tag: '转运',
+    price: '¥36',
+    description: '适合在解读提示需要整理状态时加入行动清单。',
+    accent: 'from-[#A3D3F9] to-[#E8D6F4]',
+    icon: <WindIcon />,
+  },
+  {
+    name: '彩虹牌面贴纸',
+    tag: '分享礼物',
+    price: '¥19',
+    description: '把今日启示保存下来，也可以送给同频的朋友。',
+    accent: 'from-[#FDC7D0] to-[#FF8F61]',
+    icon: <SparkleIcon />,
+  },
+];
+
 export default function Home() {
   return (
-    <div className="min-h-screen bg-arcana-charcoal text-arcana-cream grain-overlay vignette-overlay relative">
+    <div className="min-h-screen bg-arcana-charcoal text-arcana-cream grain-overlay vignette-overlay relative overflow-hidden">
       {/* Star field background */}
       <StarField count={18} />
 
       {/* ========== HERO SECTION ========== */}
-      <section className="relative min-h-screen flex items-center justify-center px-6 py-20 overflow-hidden">
+      <section className="relative min-h-screen flex items-center justify-center px-6 py-16 md:py-20 overflow-hidden">
         {/* Background glow orbs */}
         <GlowOrb size="lg" className="top-1/4 left-1/4 -translate-x-1/2 -translate-y-1/2" intensity="low" />
         <GlowOrb size="md" className="bottom-1/4 right-1/4 translate-x-1/2 translate-y-1/2" intensity="low" />
@@ -125,13 +159,13 @@ export default function Home() {
           >
             {/* Badge */}
             <motion.div
-              className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-arcana-gold/20 bg-arcana-charcoal-light/50 mb-6"
+              className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-white/70 bg-white/70 shadow-sm backdrop-blur-xl mb-6"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.2 }}
             >
               <span className="w-2 h-2 rounded-full bg-arcana-gold animate-pulse" />
-              <span className="text-xs text-arcana-gray tracking-wide">没有厄运预言，只有温柔指引</span>
+              <span className="text-xs text-arcana-gray tracking-wide">iOS 风格的温柔指引</span>
             </motion.div>
 
             {/* Main headline */}
@@ -152,7 +186,7 @@ export default function Home() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.5 }}
             >
-              一道彩虹提醒，一张塔罗启示，今日一个温柔的行动
+              一道彩虹提醒，一张塔罗启示，解读后给你一个可执行的转运选择
             </motion.p>
 
             {/* CTAs */}
@@ -162,31 +196,61 @@ export default function Home() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.7 }}
             >
-              <button className="px-8 py-3.5 rounded-full bg-arcana-gold text-arcana-charcoal font-medium text-sm tracking-wide transition-all hover:bg-arcana-gold-bright hover:shadow-lg hover:shadow-arcana-gold/20">
+              <button className="px-8 py-3.5 rounded-full bg-arcana-charcoal-light text-arcana-cream font-medium text-sm tracking-wide border border-arcana-gold/50 shadow-lg shadow-arcana-gold/10 transition-all hover:border-arcana-gold">
                 下载应用
               </button>
-              <button className="px-8 py-3.5 rounded-full border border-arcana-gold/30 text-arcana-gold font-medium text-sm tracking-wide transition-all hover:border-arcana-gold/50 hover:bg-arcana-gold/5">
+              <button className="px-8 py-3.5 rounded-full border border-white/80 bg-white/70 text-arcana-cream font-medium text-sm tracking-wide shadow-sm backdrop-blur-xl transition-all hover:bg-white">
                 了解运作方式
               </button>
             </motion.div>
           </motion.div>
 
-          {/* Right: Arcana Icon */}
+          {/* Right: iOS app preview */}
           <motion.div
             className="relative flex items-center justify-center"
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 1.2, delay: 0.4, ease: 'easeOut' }}
           >
-            <div className="relative w-64 h-64 md:w-80 md:h-80 lg:w-96 lg:h-96">
-              <ArcanaIcon className="w-full h-full" />
-              {/* Additional soft glow behind icon */}
-              <div
-                className="absolute inset-0 -z-10 blur-3xl opacity-30"
-                style={{
-                  background: 'radial-gradient(circle, rgba(184, 149, 110, 0.4) 0%, transparent 60%)',
-                }}
-              />
+            <div className="ios-phone relative w-[280px] overflow-hidden rounded-[3rem] bg-[#F8F6F1] p-3 md:w-[320px]">
+              <div className="absolute left-1/2 top-3 z-20 h-6 w-24 -translate-x-1/2 rounded-full bg-[#2A2A2A]" />
+              <div className="rounded-[2.25rem] bg-[#F8F6F1] px-4 pb-5 pt-10">
+                <div className="mb-4 flex items-center justify-between">
+                  <div>
+                    <p className="text-xs text-arcana-gray">今日解读</p>
+                    <p className="text-xl font-semibold text-arcana-cream">星星</p>
+                  </div>
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white text-arcana-gold shadow-sm">
+                    <SparkleIcon />
+                  </div>
+                </div>
+
+                <div className="ios-glass mb-4 rounded-[2rem] p-5">
+                  <div className="mx-auto mb-4 flex h-32 w-24 items-center justify-center rounded-3xl bg-gradient-to-b from-[#FFFDF9] via-[#E8D6F4] to-[#FDC7D0] text-arcana-gold shadow-xl">
+                    <ArcanaIcon className="h-16 w-16" />
+                  </div>
+                  <p className="text-sm leading-relaxed text-arcana-gray">
+                    今天适合把愿望落到一个具体行动：整理能量，选择一个随身提醒。
+                  </p>
+                </div>
+
+                <div className="rounded-3xl bg-white p-4 shadow-sm">
+                  <div className="mb-3 flex items-center justify-between">
+                    <span className="text-sm font-semibold text-arcana-cream">转运推荐</span>
+                    <span className="rounded-full bg-[#F8F6F1] px-2 py-1 text-xs text-arcana-gold">可购买</span>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-[#FF8F61] to-[#FDC7D0] text-white">
+                      <BraceletIcon />
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <p className="text-sm font-medium text-arcana-cream">幸运手环</p>
+                      <p className="truncate text-xs text-arcana-gray">随身祝福与每日提醒</p>
+                    </div>
+                    <p className="text-sm font-semibold text-arcana-cream">¥68</p>
+                  </div>
+                </div>
+              </div>
             </div>
           </motion.div>
         </div>
@@ -266,7 +330,7 @@ export default function Home() {
       </section>
 
       {/* ========== FEATURES ========== */}
-      <section className="relative px-6 py-20 md:py-32 bg-arcana-charcoal-light/30">
+      <section className="relative px-6 py-20 md:py-32 bg-white/45">
         <GlowOrb size="md" className="top-0 right-0 -translate-y-1/2" intensity="low" />
 
         <div className="max-w-5xl mx-auto">
@@ -328,8 +392,91 @@ export default function Home() {
         </div>
       </section>
 
+      {/* ========== AFTER READING SHOP ========== */}
+      <section className="relative px-6 py-20 md:py-32">
+        <div className="max-w-6xl mx-auto">
+          <SectionTitle
+            title="解读后的转运商店"
+            subtitle="把牌面启示连接到一个可执行、可购买的温柔行动"
+          />
+
+          <div className="grid gap-6 lg:grid-cols-[0.95fr_1.05fr] lg:items-center">
+            <motion.div
+              className="ios-glass rounded-[2rem] p-5 md:p-6"
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '-50px' }}
+              transition={{ duration: 0.6 }}
+            >
+                <div className="rounded-[1.5rem] bg-[#F8F6F1] p-4">
+                <div className="mb-4 flex items-center justify-between">
+                  <div>
+                    <p className="text-xs text-arcana-gray">解读完成</p>
+                    <h3 className="text-2xl font-semibold text-arcana-cream">今日行动</h3>
+                  </div>
+                  <span className="rounded-full bg-white px-3 py-1 text-xs font-medium text-arcana-gold shadow-sm">已匹配</span>
+                </div>
+
+                <div className="mb-4 rounded-3xl bg-white p-5 shadow-sm">
+                  <p className="mb-2 text-sm font-semibold text-arcana-cream">牌面提示</p>
+                  <p className="text-sm leading-relaxed text-arcana-gray">
+                    你需要一个持续出现的提醒，把内心的愿望变成今日的小步骤。
+                  </p>
+                </div>
+
+                <div className="rounded-3xl bg-[#2A2A2A] p-5 text-white shadow-xl">
+                  <div className="mb-5 flex items-center justify-between">
+                    <div>
+                      <p className="text-xs text-white/60">推荐商品</p>
+                      <p className="text-xl font-semibold">幸运手环</p>
+                    </div>
+                    <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-white/12 text-[#FDC7D0]">
+                      <BraceletIcon />
+                    </div>
+                  </div>
+                  <div className="flex items-end justify-between gap-4">
+                    <p className="max-w-[12rem] text-sm leading-relaxed text-white/70">根据今日解读自动匹配，可加入购物袋或先收藏。</p>
+                    <button className="rounded-full bg-white px-5 py-2.5 text-sm font-semibold text-[#2A2A2A]">加入</button>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+
+            <div className="grid gap-4 sm:grid-cols-3 lg:grid-cols-1">
+              {shopProducts.map((product, index) => (
+                <motion.div
+                  key={product.name}
+                  className="ios-glass rounded-[1.75rem] p-4"
+                  initial={{ opacity: 0, y: 24 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: '-50px' }}
+                  transition={{ duration: 0.55, delay: index * 0.1 }}
+                >
+                  <div className="flex items-start gap-4">
+                    <div className={`flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br ${product.accent} text-white shadow-lg`}>
+                      {product.icon}
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <div className="mb-1 flex items-center gap-2">
+                        <h3 className="truncate text-base font-semibold text-arcana-cream">{product.name}</h3>
+                        <span className="shrink-0 rounded-full bg-white px-2 py-0.5 text-[11px] text-arcana-gray shadow-sm">{product.tag}</span>
+                      </div>
+                      <p className="mb-3 text-sm leading-relaxed text-arcana-gray">{product.description}</p>
+                      <div className="flex items-center justify-between">
+                        <span className="text-base font-semibold text-arcana-cream">{product.price}</span>
+                        <button className="rounded-full bg-arcana-gold px-4 py-2 text-xs font-semibold text-white shadow-md shadow-arcana-gold/20">查看</button>
+                      </div>
+                    </div>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* ========== TESTIMONIALS ========== */}
-      <section className="relative px-6 py-20 md:py-32 bg-arcana-charcoal-light/30">
+      <section className="relative px-6 py-20 md:py-32 bg-white/45">
         <div className="max-w-5xl mx-auto">
           <SectionTitle
             title="用户评价"
@@ -340,7 +487,7 @@ export default function Home() {
             {testimonials.map((testimonial, index) => (
               <motion.div
                 key={index}
-                className="p-6 rounded-lg border border-arcana-gold/10 bg-arcana-charcoal/50"
+                className="p-6 rounded-3xl border border-white/80 bg-white/70 shadow-sm backdrop-blur-xl"
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: '-50px' }}
@@ -352,7 +499,7 @@ export default function Home() {
                 </svg>
 
                 <p className="text-arcana-cream text-sm leading-relaxed mb-4">
-                  "{testimonial.quote}"
+                  &ldquo;{testimonial.quote}&rdquo;
                 </p>
 
                 <div className="flex items-center gap-3">
@@ -462,7 +609,7 @@ export default function Home() {
       ========== */}
 
       {/* ========== FAQ ========== */}
-      <section className="relative px-6 py-20 md:py-32 bg-arcana-charcoal-light/30">
+      <section className="relative px-6 py-20 md:py-32 bg-white/45">
         <div className="max-w-2xl mx-auto">
           <SectionTitle
             title="常见问题"
@@ -512,10 +659,10 @@ export default function Home() {
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <button className="px-10 py-4 rounded-full bg-arcana-gold text-arcana-charcoal font-medium text-sm tracking-wide transition-all hover:bg-arcana-gold-bright hover:shadow-lg hover:shadow-arcana-gold/20">
+              <button className="px-10 py-4 rounded-full bg-arcana-charcoal-light text-arcana-cream font-medium text-sm tracking-wide border border-arcana-gold/50 shadow-lg shadow-arcana-gold/10 transition-all hover:border-arcana-gold">
                 下载应用
               </button>
-              <button className="px-10 py-4 rounded-full border border-arcana-gold/30 text-arcana-gold font-medium text-sm tracking-wide transition-all hover:border-arcana-gold/50 hover:bg-arcana-gold/5">
+              <button className="px-10 py-4 rounded-full border border-white/80 bg-white/70 text-arcana-cream font-medium text-sm tracking-wide shadow-sm backdrop-blur-xl transition-all hover:bg-white">
                 了解更多
               </button>
             </div>
@@ -524,7 +671,7 @@ export default function Home() {
       </section>
 
       {/* ========== FOOTER ========== */}
-      <footer className="relative px-6 py-12 border-t border-arcana-gold/10">
+      <footer className="relative px-6 py-12 border-t border-white/70 bg-white/40">
         <div className="max-w-5xl mx-auto">
           <div className="flex flex-col md:flex-row items-center justify-between gap-6">
             <div className="flex items-center gap-2">

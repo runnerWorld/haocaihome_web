@@ -29,7 +29,7 @@ export default function GlowOrb({
     <motion.div
       className={`absolute rounded-full blur-3xl ${sizeClasses[size]} ${className}`}
       style={{
-        background: `radial-gradient(circle, rgba(184, 149, 110, ${opacityMap[intensity]}) 0%, rgba(184, 149, 110, 0) 70%)`,
+        background: `radial-gradient(circle, rgba(255, 143, 97, ${opacityMap[intensity]}) 0%, rgba(253, 199, 208, ${opacityMap[intensity] * 0.55}) 42%, rgba(163, 211, 249, 0) 72%)`,
       }}
       animate={{
         scale: [1, 1.1, 1],

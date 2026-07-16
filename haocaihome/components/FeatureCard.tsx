@@ -13,13 +13,13 @@ interface FeatureCardProps {
 export default function FeatureCard({ title, description, icon, delay = 0 }: FeatureCardProps) {
   return (
     <motion.div
-      className="relative p-6 rounded-lg bg-arcana-charcoal-light/50 border border-arcana-gold/10 card-hover-glow"
+      className="relative p-6 rounded-3xl bg-gradient-to-br from-[#FFFDF9] to-[#F8F6F1] border border-arcana-gold/20 card-hover-glow"
       initial={{ opacity: 0, y: 30 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-50px' }}
       transition={{ duration: 0.6, delay, ease: 'easeOut' }}
     >
-      <div className="w-12 h-12 mb-4 flex items-center justify-center rounded-full bg-arcana-charcoal border border-arcana-gold/20">
+      <div className="w-12 h-12 mb-4 flex items-center justify-center rounded-full bg-arcana-gold/10 border border-arcana-gold/20 text-arcana-gold">
         {icon}
       </div>
       <h3 className="text-lg font-medium text-arcana-cream mb-2">{title}</h3>

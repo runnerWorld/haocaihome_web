@@ -1,31 +1,33 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-
 interface Star {
   id: number;
-  x: number;
-  y: number;
-  size: number;
-  delay: number;
-  duration: number;
+  x: string;
+  y: string;
+  size: string;
+  delay: string;
+  duration: string;
 }
 
-export default function StarField({ count = 15 }: { count?: number }) {
-  const [stars, setStars] = useState<Star[]>([]);
+const seededValue = (seed: number) => {
+  const x = Math.sin(seed) * 10000;
+  return x - Math.floor(x);
+};
 
-  // Generate stars only on the client to avoid SSR/CSR mismatches from Math.random.
-  useEffect(() => {
-    const generated = Array.from({ length: count }, (_, i) => ({
-      id: i,
-      x: Math.random() * 100,
-      y: Math.random() * 100,
-      size: Math.random() * 2 + 1,
-      delay: Math.random() * 5,
-      duration: Math.random() * 3 + 2,
-    }));
-    setStars(generated);
-  }, [count]);
+const fixed = (value: number) => value.toFixed(6);
+
+const generateStars = (count: number): Star[] =>
+  Array.from({ length: count }, (_, i) => ({
+    id: i,
+    x: fixed(seededValue(i * 6 + 1) * 100),
+    y: fixed(seededValue(i * 6 + 2) * 100),
+    size: fixed(seededValue(i * 6 + 3) * 2 + 1),
+    delay: fixed(seededValue(i * 6 + 4) * 5),
+    duration: fixed(seededValue(i * 6 + 5) * 3 + 2),
+  }));
+
+export default function StarField({ count = 15 }: { count?: number }) {
+  const stars = generateStars(count);
 
   return (
     <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
