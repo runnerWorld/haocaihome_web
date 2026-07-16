@@ -5,50 +5,31 @@ import StarField from '@/components/StarField';
 import GlowOrb from '@/components/GlowOrb';
 import ArcanaIcon from '@/components/ArcanaIcon';
 import SectionTitle from '@/components/SectionTitle';
-import FeatureCard from '@/components/FeatureCard';
-import RitualPreview from '@/components/RitualPreview';
 import FAQItem from '@/components/FAQItem';
 
-// Icons as inline SVG components
 const RainbowIcon = () => (
-  <svg viewBox="0 0 24 24" className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="1.5">
+  <svg viewBox="0 0 24 24" className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth="1.6">
     <path d="M4 18C4 14.6863 6.68629 12 10 12H14C17.3137 12 20 14.6863 20 18" strokeLinecap="round" />
     <path d="M6 18C6 15.7909 7.79086 14 10 14H14C16.2091 14 18 15.7909 18 18" strokeLinecap="round" />
     <path d="M8 18C8 16.8954 8.89543 16 10 16H14C15.1046 16 16 16.8954 16 18" strokeLinecap="round" />
   </svg>
 );
 
-const TapIcon = () => (
-  <svg viewBox="0 0 24 24" className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="1.5">
-    <circle cx="12" cy="8" r="3" />
-    <path d="M12 11V15M12 15L9 18M12 15L15 18" strokeLinecap="round" strokeLinejoin="round" />
-  </svg>
-);
-
 const SparkleIcon = () => (
-  <svg viewBox="0 0 24 24" className="w-6 h-6" fill="currentColor">
+  <svg viewBox="0 0 24 24" className="h-6 w-6" fill="currentColor">
     <path d="M12 2L13.5 8.5L20 10L13.5 11.5L12 18L10.5 11.5L4 10L10.5 8.5L12 2Z" />
   </svg>
 );
 
-const EyeIcon = () => (
-  <svg viewBox="0 0 24 24" className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="1.5">
-    <path d="M2 12C2 12 5 5 12 5C19 5 22 12 22 12C22 12 19 19 12 19C5 19 2 12 2 12Z" />
-    <circle cx="12" cy="12" r="3" />
-  </svg>
-);
-
-const ShareIcon = () => (
-  <svg viewBox="0 0 24 24" className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="1.5">
-    <circle cx="18" cy="5" r="3" />
-    <circle cx="6" cy="12" r="3" />
-    <circle cx="18" cy="19" r="3" />
-    <path d="M8.59 13.51L15.42 17.49M15.41 6.51L8.59 10.49" />
+const ChatIcon = () => (
+  <svg viewBox="0 0 24 24" className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth="1.6">
+    <path d="M5 6.5C5 5.12 6.12 4 7.5 4H16.5C17.88 4 19 5.12 19 6.5V12.5C19 13.88 17.88 15 16.5 15H11L6 20V15.2C5.42 14.78 5 14.08 5 13.25V6.5Z" strokeLinejoin="round" />
+    <path d="M8.5 8.5H15.5M8.5 11.5H13" strokeLinecap="round" />
   </svg>
 );
 
 const BraceletIcon = () => (
-  <svg viewBox="0 0 24 24" className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="1.7">
+  <svg viewBox="0 0 24 24" className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth="1.7">
     <circle cx="12" cy="12" r="7" />
     <circle cx="12" cy="5" r="1.6" fill="currentColor" stroke="none" />
     <circle cx="18.1" cy="8.5" r="1.4" fill="currentColor" stroke="none" />
@@ -59,643 +40,490 @@ const BraceletIcon = () => (
   </svg>
 );
 
-const WindIcon = () => (
-  <svg viewBox="0 0 24 24" className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="1.7">
-    <path d="M4 8H15.5C17.4 8 18.5 6.9 18.5 5.5C18.5 4.3 17.6 3.5 16.5 3.5C15.4 3.5 14.7 4.1 14.3 5" strokeLinecap="round" />
-    <path d="M4 12H19" strokeLinecap="round" />
-    <path d="M4 16H14.5C16.4 16 17.5 17.1 17.5 18.5C17.5 19.7 16.6 20.5 15.5 20.5C14.4 20.5 13.7 19.9 13.3 19" strokeLinecap="round" />
-  </svg>
-);
+const navItems = [
+  { label: '彩虹心情', href: '#rainbow-mood' },
+  { label: 'MBTI', href: '#mbti' },
+  { label: 'AI 问答', href: '#ai-chat' },
+  { label: '在线 Shop', href: '#shop' },
+];
 
-// FAQ Data
-const faqData = [
+const featureCards = [
   {
-    question: '这是真正的算命吗？',
-    answer: '彩虹奥秘专为内心反思和温柔指引而设计，而非预测未来。我们的解读提供象征性的启示来激励你的一天，而不是决定你的命运。把它当作一个正念的停顿时刻，而非预言。',
+    title: '彩虹心情',
+    body: '记录当下情绪，生成一张今日心情牌，把复杂感受转成一句可以执行的提醒。',
+    icon: <RainbowIcon />,
+    href: '#rainbow-mood',
   },
   {
-    question: '彩虹提醒是如何运作的？',
-    answer: '我们使用天气数据和大气条件来检测你所在区域何时可能出现彩虹。当条件吻合时，你会收到一个温和的通知，邀请你抽取今日塔罗牌。这是大自然在说"停下来歇一歇"。',
+    title: 'MBTI 守护牌',
+    body: '完成轻量人格测试，获得类型、守护塔罗与 AI 个性解读。',
+    icon: <SparkleIcon />,
+    href: '#mbti',
   },
   {
-    question: '我可以随时抽牌吗？',
-    answer: '免费用户每次彩虹提醒可抽取一张牌。高级会员可以随时抽牌——非常适合晨间仪式或一天中任何需要反思片刻的时候。',
-  },
-  {
-    question: '高级版解锁了什么？',
-    answer: '高级版包括无限每日抽牌、带有历史奥秘背景的深度解读、"三选一"牌阵选项，以及独家季节限定牌面设计。你还将优先体验新功能。',
-  },
-  {
-    question: '我的数据安全吗？',
-    answer: '绝对安全。你的解读记录存储在本地设备上。我们仅使用你的位置信息来检测彩虹，绝不会分享个人数据。你可以随时在设置中删除历史记录。',
+    title: 'AI 继续追问',
+    body: '围绕牌面聊感情、工作、选择和情绪，不止停在一次解读。',
+    icon: <ChatIcon />,
+    href: '#ai-chat',
   },
 ];
 
-// Testimonials Data
-const testimonials = [
-  {
-    quote: '彩虹通知是一种如此温柔的方式来暂停我的一天。感觉像是宇宙送来的小礼物。',
-    author: '小雅',
-    role: '设计师',
-  },
-  {
-    quote: '起初我持怀疑态度，但仪式动画确实很让人平静。解读很有心意，不是千篇一律。',
-    author: '子轩',
-    role: '工程师',
-  },
-  {
-    quote: '终于有一款塔罗应用不显得俗气或过于神秘主义了。设计精美，体验高级。',
-    author: '思琪',
-    role: '作家',
-  },
+const moods = [
+  { label: '开心', tone: 'bg-[#FDC7D0]' },
+  { label: '平静', tone: 'bg-[#A3D3F9]' },
+  { label: '焦虑', tone: 'bg-[#E8D6F4]' },
+  { label: '低落', tone: 'bg-[#F8F6F1]' },
+  { label: '期待', tone: 'bg-[#FF8F61]' },
 ];
 
 const shopProducts = [
   {
     name: '幸运手环',
-    tag: '今日推荐',
+    tag: '随身提醒',
     price: '¥68',
-    description: '搭配今日牌面能量，作为随身提醒与祝福物。',
-    accent: 'from-[#FF8F61] to-[#FDC7D0]',
+    description: '适合在解读结束后作为每日祝福和行动锚点。',
     icon: <BraceletIcon />,
   },
   {
     name: '转运净化包',
-    tag: '转运',
+    tag: '情绪整理',
     price: '¥36',
-    description: '适合在解读提示需要整理状态时加入行动清单。',
-    accent: 'from-[#A3D3F9] to-[#E8D6F4]',
-    icon: <WindIcon />,
+    description: '当牌面提示需要放下、整理或重新开始时推荐。',
+    icon: <SparkleIcon />,
   },
   {
     name: '彩虹牌面贴纸',
-    tag: '分享礼物',
+    tag: '记录分享',
     price: '¥19',
-    description: '把今日启示保存下来，也可以送给同频的朋友。',
-    accent: 'from-[#FDC7D0] to-[#FF8F61]',
-    icon: <SparkleIcon />,
+    description: '把今日牌面保存下来，也可以送给同频的朋友。',
+    icon: <RainbowIcon />,
   },
 ];
 
+const faqData = [
+  {
+    question: '这是算命吗？',
+    answer: '不是。彩虹奥秘更接近情绪记录、象征解读和自我反思工具。它不会替你决定命运，而是帮你把当下状态整理成一句温柔的行动提醒。',
+  },
+  {
+    question: 'MBTI 和塔罗怎么结合？',
+    answer: 'MBTI 用来描述你的偏好和决策方式，塔罗作为象征语言补充当下视角。应用会把人格类型、守护牌和 AI 解读放在同一个结果页里。',
+  },
+  {
+    question: '彩虹心情是什么？',
+    answer: '你可以记录当天心情，应用会根据情绪推荐一张心情牌，并给出短解读、行动建议和可继续追问的 AI 对话入口。',
+  },
+  {
+    question: 'AI 问答会做什么？',
+    answer: 'AI 会基于你的牌面、问题和上下文继续回答。例如感情、工作、选择、今天要避免什么，或这张牌为什么会出现。',
+  },
+  {
+    question: '在线 Shop 和解读有什么关系？',
+    answer: 'Shop 不是强行销售，而是在解读结束后提供一个可收藏、可赠送、可执行的行动建议，例如幸运手环、转运净化包或牌面周边。',
+  },
+];
+
+const PillButton = ({ children, href, primary = false }: { children: React.ReactNode; href: string; primary?: boolean }) => (
+  <a
+    href={href}
+    className={`inline-flex h-12 items-center justify-center rounded-full px-6 text-sm font-semibold transition-all ${
+      primary
+        ? 'border border-arcana-gold/50 bg-arcana-charcoal-light text-arcana-cream shadow-lg shadow-arcana-gold/10 hover:border-arcana-gold'
+        : 'border border-white/80 bg-white/70 text-arcana-cream shadow-sm backdrop-blur-xl hover:bg-white'
+    }`}
+  >
+    {children}
+  </a>
+);
+
 export default function Home() {
   return (
-    <div className="min-h-screen bg-arcana-charcoal text-arcana-cream grain-overlay vignette-overlay relative overflow-hidden">
-      {/* Star field background */}
+    <div className="relative min-h-screen overflow-hidden bg-arcana-charcoal text-arcana-cream grain-overlay vignette-overlay">
       <StarField count={18} />
 
-      {/* ========== HERO SECTION ========== */}
-      <section className="relative min-h-screen flex items-center justify-center px-6 py-16 md:py-20 overflow-hidden">
-        {/* Background glow orbs */}
-        <GlowOrb size="lg" className="top-1/4 left-1/4 -translate-x-1/2 -translate-y-1/2" intensity="low" />
-        <GlowOrb size="md" className="bottom-1/4 right-1/4 translate-x-1/2 translate-y-1/2" intensity="low" />
+      <header className="fixed left-0 right-0 top-0 z-50 px-4 py-3">
+        <nav className="mx-auto flex max-w-6xl items-center justify-between rounded-full border border-white/80 bg-white/70 px-4 py-2 shadow-sm backdrop-blur-2xl">
+          <a href="#" className="flex items-center gap-2">
+            <span className="flex h-9 w-9 items-center justify-center rounded-full bg-arcana-gold/12 text-arcana-gold">
+              <SparkleIcon />
+            </span>
+            <span className="text-sm font-semibold text-arcana-cream">彩虹奥秘</span>
+          </a>
 
-        <div className="max-w-6xl mx-auto w-full grid lg:grid-cols-2 gap-12 lg:gap-16 items-center relative z-10">
-          {/* Left: Content */}
-          <motion.div
-            className="text-center lg:text-left"
-            initial={{ opacity: 0, y: 40 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1, ease: 'easeOut' }}
-          >
-            {/* Badge */}
-            <motion.div
-              className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-white/70 bg-white/70 shadow-sm backdrop-blur-xl mb-6"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-            >
-              <span className="w-2 h-2 rounded-full bg-arcana-gold animate-pulse" />
-              <span className="text-xs text-arcana-gray tracking-wide">iOS 风格的温柔指引</span>
-            </motion.div>
-
-            {/* Main headline */}
-            <motion.h1
-              className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-light tracking-tight leading-tight mb-6"
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.3 }}
-            >
-              <span className="text-arcana-cream">彩虹</span>{' '}
-              <span className="text-arcana-gold">奥秘</span>
-            </motion.h1>
-
-            {/* Tagline */}
-            <motion.p
-              className="text-lg md:text-xl text-arcana-gray font-light mb-8 max-w-md mx-auto lg:mx-0"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.5 }}
-            >
-              一道彩虹提醒，一张塔罗启示，解读后给你一个可执行的转运选择
-            </motion.p>
-
-            {/* CTAs */}
-            <motion.div
-              className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.7 }}
-            >
-              <button className="px-8 py-3.5 rounded-full bg-arcana-charcoal-light text-arcana-cream font-medium text-sm tracking-wide border border-arcana-gold/50 shadow-lg shadow-arcana-gold/10 transition-all hover:border-arcana-gold">
-                下载应用
-              </button>
-              <button className="px-8 py-3.5 rounded-full border border-white/80 bg-white/70 text-arcana-cream font-medium text-sm tracking-wide shadow-sm backdrop-blur-xl transition-all hover:bg-white">
-                了解运作方式
-              </button>
-            </motion.div>
-          </motion.div>
-
-          {/* Right: iOS app preview */}
-          <motion.div
-            className="relative flex items-center justify-center"
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 1.2, delay: 0.4, ease: 'easeOut' }}
-          >
-            <div className="ios-phone relative w-[280px] overflow-hidden rounded-[3rem] bg-[#F8F6F1] p-3 md:w-[320px]">
-              <div className="absolute left-1/2 top-3 z-20 h-6 w-24 -translate-x-1/2 rounded-full bg-[#2A2A2A]" />
-              <div className="rounded-[2.25rem] bg-[#F8F6F1] px-4 pb-5 pt-10">
-                <div className="mb-4 flex items-center justify-between">
-                  <div>
-                    <p className="text-xs text-arcana-gray">今日解读</p>
-                    <p className="text-xl font-semibold text-arcana-cream">星星</p>
-                  </div>
-                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white text-arcana-gold shadow-sm">
-                    <SparkleIcon />
-                  </div>
-                </div>
-
-                <div className="ios-glass mb-4 rounded-[2rem] p-5">
-                  <div className="mx-auto mb-4 flex h-32 w-24 items-center justify-center rounded-3xl bg-gradient-to-b from-[#FFFDF9] via-[#E8D6F4] to-[#FDC7D0] text-arcana-gold shadow-xl">
-                    <ArcanaIcon className="h-16 w-16" />
-                  </div>
-                  <p className="text-sm leading-relaxed text-arcana-gray">
-                    今天适合把愿望落到一个具体行动：整理能量，选择一个随身提醒。
-                  </p>
-                </div>
-
-                <div className="rounded-3xl bg-white p-4 shadow-sm">
-                  <div className="mb-3 flex items-center justify-between">
-                    <span className="text-sm font-semibold text-arcana-cream">转运推荐</span>
-                    <span className="rounded-full bg-[#F8F6F1] px-2 py-1 text-xs text-arcana-gold">可购买</span>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-[#FF8F61] to-[#FDC7D0] text-white">
-                      <BraceletIcon />
-                    </div>
-                    <div className="min-w-0 flex-1">
-                      <p className="text-sm font-medium text-arcana-cream">幸运手环</p>
-                      <p className="truncate text-xs text-arcana-gray">随身祝福与每日提醒</p>
-                    </div>
-                    <p className="text-sm font-semibold text-arcana-cream">¥68</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </motion.div>
-        </div>
-
-        {/* Scroll indicator */}
-        <motion.div
-          className="absolute bottom-8 left-1/2 -translate-x-1/2"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1, y: [0, 8, 0] }}
-          transition={{
-            opacity: { delay: 1.5, duration: 0.5 },
-            y: { repeat: Infinity, duration: 2, ease: 'easeInOut' },
-          }}
-        >
-          <div className="w-6 h-10 rounded-full border border-arcana-gold/30 flex justify-center pt-2">
-            <div className="w-1 h-2 rounded-full bg-arcana-gold/50" />
-          </div>
-        </motion.div>
-      </section>
-
-      {/* ========== HOW IT WORKS ========== */}
-      <section className="relative px-6 py-20 md:py-32">
-        <div className="max-w-4xl mx-auto">
-          <SectionTitle
-            title="运作方式"
-            subtitle="一个简单的仪式，由自然之光引导"
-          />
-
-          <div className="grid md:grid-cols-3 gap-8 md:gap-12">
-            {[
-              {
-                step: 1,
-                title: '彩虹提醒到达',
-                description: '当大气条件吻合，彩虹在你附近出现时，我们会发送一个温和的通知。',
-                icon: <RainbowIcon />,
-              },
-              {
-                step: 2,
-                title: '点击接收你的启示',
-                description: '打开应用，开始仪式抽牌。在牌面揭示之前，享受片刻宁静。',
-                icon: <TapIcon />,
-              },
-              {
-                step: 3,
-                title: '今日一个温柔的行动',
-                description: '获取你的牌、它的含义，以及一个可以伴随你度过一天的简单行动。',
-                icon: <SparkleIcon />,
-              },
-            ].map((item, index) => (
-              <motion.div
-                key={item.step}
-                className="text-center"
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: '-50px' }}
-                transition={{ duration: 0.6, delay: index * 0.15 }}
-              >
-                {/* Step number with icon */}
-                <div className="relative w-16 h-16 mx-auto mb-6">
-                  <div className="absolute inset-0 rounded-full border border-arcana-gold/30 flex items-center justify-center text-arcana-gold">
-                    {item.icon}
-                  </div>
-                  <div className="absolute -top-2 -right-2 w-6 h-6 rounded-full bg-arcana-charcoal border border-arcana-gold/40 flex items-center justify-center text-xs text-arcana-gold font-medium">
-                    {item.step}
-                  </div>
-                </div>
-
-                <h3 className="text-lg font-medium text-arcana-cream mb-2">{item.title}</h3>
-                <p className="text-sm text-arcana-gray leading-relaxed">{item.description}</p>
-              </motion.div>
+          <div className="hidden items-center gap-1 md:flex">
+            {navItems.map((item) => (
+              <a key={item.href} href={item.href} className="rounded-full px-4 py-2 text-sm text-arcana-gray transition-colors hover:bg-white hover:text-arcana-cream">
+                {item.label}
+              </a>
             ))}
           </div>
 
-          {/* Connecting line (desktop only) */}
-          <div className="hidden md:block absolute top-1/2 left-1/2 -translate-x-1/2 w-2/3 max-w-md h-px bg-gradient-to-r from-transparent via-arcana-gold/20 to-transparent" />
-        </div>
-      </section>
+          <a href="#download" className="rounded-full bg-arcana-gold px-4 py-2 text-sm font-semibold text-white shadow-md shadow-arcana-gold/20">
+            下载 App
+          </a>
+        </nav>
+      </header>
 
-      {/* ========== FEATURES ========== */}
-      <section className="relative px-6 py-20 md:py-32 bg-white/45">
-        <GlowOrb size="md" className="top-0 right-0 -translate-y-1/2" intensity="low" />
+      <main>
+        <section className="relative flex min-h-screen items-center px-6 pb-20 pt-32">
+          <GlowOrb size="lg" className="left-0 top-20 -translate-x-1/2" intensity="low" />
+          <GlowOrb size="md" className="right-0 top-32 translate-x-1/3" intensity="medium" />
 
-        <div className="max-w-5xl mx-auto">
-          <SectionTitle
-            title="功能特色"
-            subtitle="为反思而设计，为美感而打造"
-          />
-
-          <div className="grid sm:grid-cols-2 gap-6">
-            <FeatureCard
-              title="彩虹触发免费抽牌"
-              description="你的每日塔罗牌由大自然本身赐予。当彩虹在你附近出现时，应用将被唤醒，赠予你一次免费抽牌。"
-              icon={<RainbowIcon />}
-              delay={0}
-            />
-            <FeatureCard
-              title="高级版：随时抽牌"
-              description="无需等待彩虹。高级会员可以在灵感召唤时随时开始仪式——无论是早晨、中午还是午夜。"
-              icon={<SparkleIcon />}
-              delay={0.1}
-            />
-            <FeatureCard
-              title="奥秘级视觉体验"
-              description="每一张牌、每一个动画、每一道光晕都经过精心打造。配得上神秘主题的视觉盛宴。"
-              icon={<EyeIcon />}
-              delay={0.2}
-            />
-            <FeatureCard
-              title="可分享的每日牌面"
-              description="将你的解读导出为精美图片。与朋友分享你的每日指引，或保存下来以供日后反思。"
-              icon={<ShareIcon />}
-              delay={0.3}
-            />
-          </div>
-        </div>
-      </section>
-
-      {/* ========== RITUAL PREVIEW ========== */}
-      <section className="relative px-6 py-20 md:py-32 overflow-hidden">
-        <GlowOrb size="lg" className="top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" intensity="medium" />
-
-        <div className="max-w-4xl mx-auto">
-          <SectionTitle
-            title="仪式体验"
-            subtitle="感受抽牌动画"
-          />
-
-          <RitualPreview />
-
-          <motion.p
-            className="text-center text-arcana-gray-dark text-sm mt-8 max-w-md mx-auto"
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.3 }}
-          >
-            此预览展示了应用内仪式体验的简化版本
-          </motion.p>
-        </div>
-      </section>
-
-      {/* ========== AFTER READING SHOP ========== */}
-      <section className="relative px-6 py-20 md:py-32">
-        <div className="max-w-6xl mx-auto">
-          <SectionTitle
-            title="解读后的转运商店"
-            subtitle="把牌面启示连接到一个可执行、可购买的温柔行动"
-          />
-
-          <div className="grid gap-6 lg:grid-cols-[0.95fr_1.05fr] lg:items-center">
+          <div className="relative z-10 mx-auto grid w-full max-w-6xl items-center gap-12 lg:grid-cols-[1fr_0.88fr]">
             <motion.div
-              className="ios-glass rounded-[2rem] p-5 md:p-6"
-              initial={{ opacity: 0, y: 30 }}
+              className="text-center lg:text-left"
+              initial={{ opacity: 0, y: 32 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, ease: 'easeOut' }}
+            >
+              <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-white/80 bg-white/70 px-3 py-1.5 text-xs text-arcana-gray shadow-sm backdrop-blur-xl">
+                <span className="h-2 w-2 rounded-full bg-arcana-gold" />
+                彩虹 · 心情 · MBTI · AI 问答
+              </div>
+
+              <h1 className="mx-auto mb-6 max-w-3xl text-4xl font-bold leading-tight tracking-normal text-arcana-cream sm:text-5xl lg:mx-0 lg:text-6xl">
+                用彩虹、心情与 AI，收到每天刚刚好的提醒
+              </h1>
+
+              <p className="mx-auto mb-8 max-w-xl text-base leading-relaxed text-arcana-gray sm:text-lg lg:mx-0">
+                记录今日心情，接收彩虹时刻，抽一张专属塔罗牌，并继续向 AI 追问你的解读。
+              </p>
+
+              <div className="flex flex-col justify-center gap-3 sm:flex-row lg:justify-start">
+                <PillButton href="#download" primary>下载 App</PillButton>
+                <PillButton href="#rainbow-mood">查看功能</PillButton>
+              </div>
+            </motion.div>
+
+            <motion.div
+              className="flex justify-center"
+              initial={{ opacity: 0, scale: 0.94, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              transition={{ duration: 0.9, delay: 0.15, ease: 'easeOut' }}
+            >
+              <div className="ios-phone relative w-[292px] overflow-hidden rounded-[3rem] bg-[#F8F6F1] p-3 sm:w-[330px]">
+                <div className="absolute left-1/2 top-3 z-20 h-6 w-24 -translate-x-1/2 rounded-full bg-[#2A2A2A]" />
+                <div className="rounded-[2.25rem] bg-[#F8F6F1] px-4 pb-5 pt-10">
+                  <div className="mb-4 flex items-center justify-between">
+                    <div>
+                      <p className="text-xs text-arcana-gray-dark">Today</p>
+                      <p className="text-xl font-bold text-arcana-cream">彩虹奥秘</p>
+                    </div>
+                    <span className="rounded-full bg-white px-3 py-1 text-xs font-medium text-arcana-gold shadow-sm">已匹配</span>
+                  </div>
+
+                  <div className="mb-4 rounded-[1.7rem] bg-white p-4 shadow-sm">
+                    <div className="mb-3 flex items-center gap-3">
+                      <div className="flex h-11 w-11 items-center justify-center rounded-full bg-arcana-gold/12 text-arcana-gold">
+                        <RainbowIcon />
+                      </div>
+                      <div>
+                        <p className="text-sm font-semibold text-arcana-cream">今日心情</p>
+                        <p className="text-xs text-arcana-gray-dark">焦虑 · 推荐节制</p>
+                      </div>
+                    </div>
+                    <p className="text-sm leading-relaxed text-arcana-gray">先把事情拆小，不急着一次解决全部。</p>
+                  </div>
+
+                  <div className="mb-4 grid grid-cols-2 gap-3">
+                    <div className="ios-glass rounded-[1.5rem] p-4">
+                      <p className="mb-1 text-xs text-arcana-gray-dark">MBTI</p>
+                      <p className="text-2xl font-bold text-arcana-gold">INFP</p>
+                      <p className="text-xs text-arcana-gray">守护牌 · 月亮</p>
+                    </div>
+                    <div className="ios-glass rounded-[1.5rem] p-4">
+                      <p className="mb-2 text-xs text-arcana-gray-dark">AI 问答</p>
+                      <div className="rounded-2xl bg-white px-3 py-2 text-xs leading-relaxed text-arcana-gray shadow-sm">
+                        我该主动联系 TA 吗？
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="rounded-[1.7rem] bg-[#2A2A2A] p-4 text-white shadow-xl">
+                    <div className="mb-3 flex items-center justify-between">
+                      <p className="text-sm font-semibold">解读后的行动</p>
+                      <BraceletIcon />
+                    </div>
+                    <div className="flex items-center justify-between gap-3">
+                      <div>
+                        <p className="text-sm">幸运手环</p>
+                        <p className="text-xs text-white/60">随身提醒 · ¥68</p>
+                      </div>
+                      <span className="rounded-full bg-white px-3 py-1.5 text-xs font-semibold text-[#2A2A2A]">查看</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        </section>
+
+        <section className="relative px-6 py-16 md:py-24">
+          <div className="mx-auto grid max-w-6xl gap-5 md:grid-cols-3">
+            {featureCards.map((feature, index) => (
+              <motion.a
+                key={feature.title}
+                href={feature.href}
+                className="card-hover-glow rounded-3xl border border-arcana-gold/20 bg-gradient-to-br from-[#FFFDF9] to-[#F8F6F1] p-6"
+                initial={{ opacity: 0, y: 24 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: '-50px' }}
+                transition={{ duration: 0.55, delay: index * 0.08 }}
+              >
+                <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-arcana-gold/10 text-arcana-gold">
+                  {feature.icon}
+                </div>
+                <h2 className="mb-2 text-xl font-semibold text-arcana-cream">{feature.title}</h2>
+                <p className="text-sm leading-relaxed text-arcana-gray">{feature.body}</p>
+              </motion.a>
+            ))}
+          </div>
+        </section>
+
+        <section id="rainbow-mood" className="relative scroll-mt-28 bg-white/45 px-6 py-20 md:py-28">
+          <div className="mx-auto grid max-w-6xl items-center gap-10 lg:grid-cols-[0.9fr_1.1fr]">
+            <div>
+              <SectionTitle title="彩虹心情" subtitle="把今天的感受，变成一张可以陪你的心情牌" className="text-left [&>*]:mx-0" />
+              <p className="text-base leading-relaxed text-arcana-gray">
+                iOS 里已经有心情记录、心情牌和通知提醒。Landing 页面要让用户一眼看懂：不是单纯抽牌，而是先记录真实状态，再得到更贴近当下的解读。
+              </p>
+            </div>
+
+            <motion.div
+              className="ios-glass rounded-[2rem] p-5"
+              initial={{ opacity: 0, y: 24 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: '-50px' }}
               transition={{ duration: 0.6 }}
             >
-                <div className="rounded-[1.5rem] bg-[#F8F6F1] p-4">
+              <div className="mb-4 grid grid-cols-2 gap-3 sm:grid-cols-5">
+                {moods.map((mood) => (
+                  <div key={mood.label} className="rounded-3xl bg-white p-3 text-center shadow-sm">
+                    <div className={`mx-auto mb-2 h-11 w-11 rounded-full ${mood.tone} border border-white/80`} />
+                    <p className="text-sm font-medium text-arcana-cream">{mood.label}</p>
+                  </div>
+                ))}
+              </div>
+
+              <div className="rounded-3xl bg-white p-5 shadow-sm">
+                <p className="mb-1 text-xs font-medium text-arcana-gray-dark">根据“焦虑”推荐</p>
                 <div className="mb-4 flex items-center justify-between">
+                  <h3 className="text-2xl font-bold text-arcana-cream">节制</h3>
+                  <span className="rounded-full bg-arcana-gold/10 px-3 py-1 text-xs font-semibold text-arcana-gold">今日行动</span>
+                </div>
+                <p className="text-sm leading-relaxed text-arcana-gray">
+                  先把一个担心写下来，再写出你今天能完成的最小一步。你不需要马上解决全部。
+                </p>
+              </div>
+            </motion.div>
+          </div>
+        </section>
+
+        <section id="mbti" className="relative scroll-mt-28 px-6 py-20 md:py-28">
+          <div className="mx-auto max-w-6xl">
+            <SectionTitle title="MBTI 守护牌" subtitle="用人格测试打开长期自我理解，再由塔罗补上当下提醒" />
+
+            <div className="grid gap-6 lg:grid-cols-[1.05fr_0.95fr]">
+              <motion.div
+                className="ios-glass rounded-[2rem] p-6"
+                initial={{ opacity: 0, y: 24 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: '-50px' }}
+                transition={{ duration: 0.6 }}
+              >
+                <div className="mb-5 flex items-center justify-between">
                   <div>
-                    <p className="text-xs text-arcana-gray">解读完成</p>
-                    <h3 className="text-2xl font-semibold text-arcana-cream">今日行动</h3>
+                    <p className="text-xs text-arcana-gray-dark">Personality Reading</p>
+                    <h3 className="text-3xl font-bold text-arcana-gold">INFP</h3>
+                    <p className="text-sm text-arcana-gray">调停者 · 守护牌：月亮</p>
                   </div>
-                  <span className="rounded-full bg-white px-3 py-1 text-xs font-medium text-arcana-gold shadow-sm">已匹配</span>
+                  <div className="flex h-20 w-14 rotate-6 items-center justify-center rounded-2xl border border-arcana-gold/30 bg-white text-arcana-gold shadow-lg">
+                    <SparkleIcon />
+                  </div>
                 </div>
-
-                <div className="mb-4 rounded-3xl bg-white p-5 shadow-sm">
-                  <p className="mb-2 text-sm font-semibold text-arcana-cream">牌面提示</p>
-                  <p className="text-sm leading-relaxed text-arcana-gray">
-                    你需要一个持续出现的提醒，把内心的愿望变成今日的小步骤。
-                  </p>
+                <div className="space-y-3">
+                  {['12 道轻量问题', '四组维度结果', '守护塔罗匹配', 'AI 个性解读'].map((item) => (
+                    <div key={item} className="flex items-center gap-3 rounded-2xl bg-white px-4 py-3 shadow-sm">
+                      <span className="h-2 w-2 rounded-full bg-arcana-gold" />
+                      <span className="text-sm text-arcana-gray">{item}</span>
+                    </div>
+                  ))}
                 </div>
+              </motion.div>
 
-                <div className="rounded-3xl bg-[#2A2A2A] p-5 text-white shadow-xl">
-                  <div className="mb-5 flex items-center justify-between">
-                    <div>
-                      <p className="text-xs text-white/60">推荐商品</p>
-                      <p className="text-xl font-semibold">幸运手环</p>
+              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-1">
+                {[
+                  ['ENTJ', '皇帝', '把计划落到结构与优先级。'],
+                  ['ISFJ', '女祭司', '先照顾内在秩序，再回应外界期待。'],
+                  ['ENFP', '星星', '把灵感收束成一个今天能开始的行动。'],
+                ].map(([type, card, text], index) => (
+                  <motion.div
+                    key={type}
+                    className="rounded-3xl border border-arcana-gold/15 bg-white/75 p-5 shadow-sm backdrop-blur-xl"
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, margin: '-50px' }}
+                    transition={{ duration: 0.5, delay: index * 0.08 }}
+                  >
+                    <div className="mb-2 flex items-center gap-2">
+                      <span className="text-xl font-bold text-arcana-gold">{type}</span>
+                      <span className="text-arcana-gray-dark">·</span>
+                      <span className="font-semibold text-arcana-cream">{card}</span>
                     </div>
-                    <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-white/12 text-[#FDC7D0]">
-                      <BraceletIcon />
-                    </div>
-                  </div>
-                  <div className="flex items-end justify-between gap-4">
-                    <p className="max-w-[12rem] text-sm leading-relaxed text-white/70">根据今日解读自动匹配，可加入购物袋或先收藏。</p>
-                    <button className="rounded-full bg-white px-5 py-2.5 text-sm font-semibold text-[#2A2A2A]">加入</button>
-                  </div>
+                    <p className="text-sm leading-relaxed text-arcana-gray">{text}</p>
+                  </motion.div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section id="ai-chat" className="relative scroll-mt-28 bg-white/45 px-6 py-20 md:py-28">
+          <div className="mx-auto grid max-w-6xl items-center gap-10 lg:grid-cols-[0.95fr_1.05fr]">
+            <div>
+              <SectionTitle title="AI 问答" subtitle="解读不是结束，而是一次可以继续追问的对话" className="text-left [&>*]:mx-0" />
+              <p className="text-base leading-relaxed text-arcana-gray">
+                用户抽到牌之后，最自然的问题不是“这是什么意思”，而是“这和我现在的问题有什么关系”。网站应该把这个场景明确展示出来。
+              </p>
+            </div>
+
+            <motion.div
+              className="ios-glass rounded-[2rem] p-5"
+              initial={{ opacity: 0, y: 24 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '-50px' }}
+              transition={{ duration: 0.6 }}
+            >
+              <div className="mb-4 rounded-3xl bg-white/70 p-4">
+                <p className="mb-1 text-xs font-semibold uppercase text-arcana-gold">Context</p>
+                <p className="text-sm font-semibold text-arcana-cream">星星 · 希望与重新连接</p>
+                <p className="mt-1 text-xs leading-relaxed text-arcana-gray">今天的牌面提醒你保留信任，但不要忽略现实节奏。</p>
+              </div>
+              <div className="space-y-3">
+                <div className="ml-auto max-w-[80%] rounded-3xl bg-arcana-gold px-4 py-3 text-sm leading-relaxed text-white">
+                  我该不该主动联系 TA？
+                </div>
+                <div className="max-w-[86%] rounded-3xl bg-white px-4 py-3 text-sm leading-relaxed text-arcana-gray shadow-sm">
+                  如果你期待的是确认关系，先不要急着索取答案。更适合发出一个轻量、没有压力的问候，观察对方是否愿意回应。
+                </div>
+                <div className="ml-auto max-w-[80%] rounded-3xl bg-[#E8D6F4] px-4 py-3 text-sm leading-relaxed text-arcana-cream">
+                  那工作上呢？
                 </div>
               </div>
             </motion.div>
+          </div>
+        </section>
 
-            <div className="grid gap-4 sm:grid-cols-3 lg:grid-cols-1">
+        <section id="shop" className="relative scroll-mt-28 px-6 py-20 md:py-28">
+          <div className="mx-auto max-w-6xl">
+            <SectionTitle title="在线 Shop" subtitle="解读后的行动建议，可以收藏、赠送，也可以变成一个随身提醒" />
+
+            <div className="grid gap-5 md:grid-cols-3">
               {shopProducts.map((product, index) => (
                 <motion.div
                   key={product.name}
-                  className="ios-glass rounded-[1.75rem] p-4"
+                  className="ios-glass rounded-[2rem] p-5"
                   initial={{ opacity: 0, y: 24 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true, margin: '-50px' }}
-                  transition={{ duration: 0.55, delay: index * 0.1 }}
+                  transition={{ duration: 0.55, delay: index * 0.08 }}
                 >
-                  <div className="flex items-start gap-4">
-                    <div className={`flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br ${product.accent} text-white shadow-lg`}>
+                  <div className="mb-5 flex items-start justify-between">
+                    <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-[#FF8F61] to-[#FDC7D0] text-white shadow-lg">
                       {product.icon}
                     </div>
-                    <div className="min-w-0 flex-1">
-                      <div className="mb-1 flex items-center gap-2">
-                        <h3 className="truncate text-base font-semibold text-arcana-cream">{product.name}</h3>
-                        <span className="shrink-0 rounded-full bg-white px-2 py-0.5 text-[11px] text-arcana-gray shadow-sm">{product.tag}</span>
-                      </div>
-                      <p className="mb-3 text-sm leading-relaxed text-arcana-gray">{product.description}</p>
-                      <div className="flex items-center justify-between">
-                        <span className="text-base font-semibold text-arcana-cream">{product.price}</span>
-                        <button className="rounded-full bg-arcana-gold px-4 py-2 text-xs font-semibold text-white shadow-md shadow-arcana-gold/20">查看</button>
-                      </div>
-                    </div>
+                    <span className="rounded-full bg-white px-3 py-1 text-xs font-medium text-arcana-gray shadow-sm">{product.tag}</span>
+                  </div>
+                  <h3 className="mb-2 text-xl font-semibold text-arcana-cream">{product.name}</h3>
+                  <p className="mb-5 text-sm leading-relaxed text-arcana-gray">{product.description}</p>
+                  <div className="flex items-center justify-between">
+                    <span className="text-lg font-bold text-arcana-cream">{product.price}</span>
+                    <button className="rounded-full bg-arcana-gold px-4 py-2 text-sm font-semibold text-white shadow-md shadow-arcana-gold/20">
+                      查看
+                    </button>
                   </div>
                 </motion.div>
               ))}
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* ========== TESTIMONIALS ========== */}
-      <section className="relative px-6 py-20 md:py-32 bg-white/45">
-        <div className="max-w-5xl mx-auto">
-          <SectionTitle
-            title="用户评价"
-            subtitle="来自社区的早期声音"
-          />
-
-          <div className="grid md:grid-cols-3 gap-6">
-            {testimonials.map((testimonial, index) => (
-              <motion.div
-                key={index}
-                className="p-6 rounded-3xl border border-white/80 bg-white/70 shadow-sm backdrop-blur-xl"
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: '-50px' }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
-              >
-                {/* Quote mark */}
-                <svg className="w-6 h-6 text-arcana-gold/30 mb-4" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M4 12C4 9.79086 5.79086 8 8 8C10.2091 8 12 9.79086 12 12V18H4V12ZM14 12C14 9.79086 15.7909 8 18 8C20.2091 8 22 9.79086 22 12V18H14V12Z" />
-                </svg>
-
-                <p className="text-arcana-cream text-sm leading-relaxed mb-4">
-                  &ldquo;{testimonial.quote}&rdquo;
-                </p>
-
-                <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-full bg-arcana-gold/10 border border-arcana-gold/20 flex items-center justify-center text-arcana-gold text-xs font-medium">
-                    {testimonial.author.charAt(0)}
+        <section className="relative bg-white/45 px-6 py-20 md:py-28">
+          <div className="mx-auto max-w-5xl">
+            <SectionTitle title="一次完整体验" subtitle="从感受到行动，整个流程不需要离开 App" />
+            <div className="grid gap-4 md:grid-cols-5">
+              {['记录心情', '等待彩虹', '抽牌解读', 'AI 追问', '收藏或购买'].map((step, index) => (
+                <motion.div
+                  key={step}
+                  className="relative rounded-3xl bg-white/75 p-5 text-center shadow-sm"
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: '-50px' }}
+                  transition={{ duration: 0.5, delay: index * 0.06 }}
+                >
+                  <div className="mx-auto mb-3 flex h-9 w-9 items-center justify-center rounded-full bg-arcana-gold/10 text-sm font-bold text-arcana-gold">
+                    {index + 1}
                   </div>
-                  <div>
-                    <p className="text-arcana-cream text-sm">{testimonial.author}</p>
-                    <p className="text-arcana-gray-dark text-xs">{testimonial.role}</p>
-                  </div>
-                </div>
-              </motion.div>
-            ))}
+                  <p className="text-sm font-semibold text-arcana-cream">{step}</p>
+                </motion.div>
+              ))}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* ========== PRICING (COMMENTED OUT) ==========
-      <section className="relative px-6 py-20 md:py-32">
-        <GlowOrb size="sm" className="top-0 left-1/4" intensity="low" />
-
-        <div className="max-w-4xl mx-auto">
-          <SectionTitle
-            title="价格方案"
-            subtitle="选择你的道路"
-          />
-
-          <div className="grid md:grid-cols-2 gap-6 max-w-3xl mx-auto">
-            <motion.div
-              className="p-8 rounded-xl border border-arcana-gold/10 bg-arcana-charcoal-light/30"
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: '-50px' }}
-              transition={{ duration: 0.6 }}
-            >
-              <h3 className="text-xl font-medium text-arcana-cream mb-2">免费版</h3>
-              <p className="text-arcana-gray text-sm mb-6">自然引导的抽牌</p>
-
-              <div className="text-3xl font-light text-arcana-cream mb-6">
-                ¥0 <span className="text-sm text-arcana-gray font-normal">/ 永久免费</span>
-              </div>
-
-              <ul className="space-y-3 mb-8">
-                {[
-                  '每次彩虹提醒可抽一次牌',
-                  '标准牌面解读',
-                  '每日行动建议',
-                  '精美仪式动画',
-                ].map((feature, i) => (
-                  <li key={i} className="flex items-center gap-3 text-sm text-arcana-gray">
-                    <span className="w-5 h-5 rounded-full border border-arcana-gold/30 flex items-center justify-center text-arcana-gold">
-                      <CheckIcon />
-                    </span>
-                    {feature}
-                  </li>
-                ))}
-              </ul>
-
-              <button className="w-full py-3 rounded-full border border-arcana-gold/30 text-arcana-gold text-sm tracking-wide transition-all hover:border-arcana-gold/50 hover:bg-arcana-gold/5">
-                免费开始
-              </button>
-            </motion.div>
-
-            <motion.div
-              className="p-8 rounded-xl border border-arcana-gold/40 bg-arcana-charcoal-light/50 relative overflow-hidden"
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: '-50px' }}
-              transition={{ duration: 0.6, delay: 0.1 }}
-            >
-              <div className="absolute top-4 right-4 px-3 py-1 rounded-full bg-arcana-gold/10 border border-arcana-gold/30 text-arcana-gold text-xs">
-                热门选择
-              </div>
-
-              <h3 className="text-xl font-medium text-arcana-gold mb-2">高级版</h3>
-              <p className="text-arcana-gray text-sm mb-6">无限神秘体验</p>
-
-              <div className="text-3xl font-light text-arcana-cream mb-2">
-                ¥28 <span className="text-sm text-arcana-gray font-normal">/ 月</span>
-              </div>
-              <p className="text-xs text-arcana-gray-dark mb-6">或 ¥198/年（省33%）</p>
-
-              <ul className="space-y-3 mb-8">
-                {[
-                  '随时抽牌，无限次数',
-                  '带背景知识的深度解读',
-                  '"三选一"牌阵选项',
-                  '独家季节限定牌面',
-                  '导出并分享精美图片',
-                ].map((feature, i) => (
-                  <li key={i} className="flex items-center gap-3 text-sm text-arcana-cream">
-                    <span className="w-5 h-5 rounded-full bg-arcana-gold/20 border border-arcana-gold/40 flex items-center justify-center text-arcana-gold">
-                      <CheckIcon />
-                    </span>
-                    {feature}
-                  </li>
-                ))}
-              </ul>
-
-              <button className="w-full py-3 rounded-full bg-arcana-gold text-arcana-charcoal font-medium text-sm tracking-wide transition-all hover:bg-arcana-gold-bright hover:shadow-lg hover:shadow-arcana-gold/20">
-                开始高级试用
-              </button>
-            </motion.div>
+        <section id="faq" className="relative px-6 py-20 md:py-28">
+          <div className="mx-auto max-w-2xl">
+            <SectionTitle title="常见问题" subtitle="关于彩虹心情、MBTI、AI 问答和 Shop" />
+            <div className="border-t border-arcana-gold/10">
+              {faqData.map((faq, index) => (
+                <FAQItem key={faq.question} question={faq.question} answer={faq.answer} delay={index * 0.04} />
+              ))}
+            </div>
           </div>
-        </div>
-      </section>
-      ========== */}
+        </section>
 
-      {/* ========== FAQ ========== */}
-      <section className="relative px-6 py-20 md:py-32 bg-white/45">
-        <div className="max-w-2xl mx-auto">
-          <SectionTitle
-            title="常见问题"
-            subtitle="你想知道的一切"
-          />
-
-          <div className="border-t border-arcana-gold/10">
-            {faqData.map((faq, index) => (
-              <FAQItem
-                key={index}
-                question={faq.question}
-                answer={faq.answer}
-                delay={index * 0.05}
-              />
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ========== FINAL CTA ========== */}
-      <section className="relative px-6 py-20 md:py-32 overflow-hidden">
-        <GlowOrb size="lg" className="top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" intensity="medium" />
-
-        <div className="max-w-2xl mx-auto text-center relative z-10">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-100px' }}
-            transition={{ duration: 0.8 }}
-          >
-            {/* Decorative star */}
-            <motion.svg
-              className="w-12 h-12 mx-auto mb-8 text-arcana-gold"
-              viewBox="0 0 48 48"
-              fill="currentColor"
-              animate={{ rotate: [0, 360] }}
-              transition={{ duration: 60, repeat: Infinity, ease: 'linear' }}
-            >
-              <path d="M24 4L27 18L40 16L30 24L40 32L27 30L24 44L21 30L8 32L18 24L8 16L21 18L24 4Z" />
-            </motion.svg>
-
-            <h2 className="text-2xl md:text-3xl lg:text-4xl font-light text-arcana-cream tracking-wide mb-4">
-              准备好接收你的启示了吗？
-            </h2>
-            <p className="text-arcana-gray text-base md:text-lg mb-8 max-w-md mx-auto">
-              下载彩虹奥秘，让大自然引导你的每日反思
+        <section id="download" className="relative px-6 py-20 md:py-28">
+          <GlowOrb size="lg" className="left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2" intensity="medium" />
+          <div className="relative z-10 mx-auto max-w-2xl text-center">
+            <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-white text-arcana-gold shadow-lg">
+              <ArcanaIcon className="h-10 w-10" />
+            </div>
+            <h2 className="mb-4 text-3xl font-bold text-arcana-cream md:text-4xl">把每天的提醒收进口袋</h2>
+            <p className="mx-auto mb-8 max-w-md text-base leading-relaxed text-arcana-gray">
+              彩虹奥秘把天气、心情、人格、塔罗和 AI 对话放在一个安静的日常仪式里。
             </p>
-
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <button className="px-10 py-4 rounded-full bg-arcana-charcoal-light text-arcana-cream font-medium text-sm tracking-wide border border-arcana-gold/50 shadow-lg shadow-arcana-gold/10 transition-all hover:border-arcana-gold">
-                下载应用
-              </button>
-              <button className="px-10 py-4 rounded-full border border-white/80 bg-white/70 text-arcana-cream font-medium text-sm tracking-wide shadow-sm backdrop-blur-xl transition-all hover:bg-white">
-                了解更多
-              </button>
-            </div>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* ========== FOOTER ========== */}
-      <footer className="relative px-6 py-12 border-t border-white/70 bg-white/40">
-        <div className="max-w-5xl mx-auto">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-            <div className="flex items-center gap-2">
-              <svg className="w-5 h-5 text-arcana-gold" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M12 2L14 8L20 8L15 12L17 18L12 14L7 18L9 12L4 8L10 8Z" />
-              </svg>
-              <span className="text-arcana-cream font-light tracking-wide">彩虹奥秘</span>
-            </div>
-
-            <div className="flex items-center gap-6 text-sm text-arcana-gray">
-              <a href="/privacy" className="hover:text-arcana-cream transition-colors">隐私政策</a>
-              <a href="/terms" className="hover:text-arcana-cream transition-colors">服务条款</a>
-              <a href="#" className="hover:text-arcana-cream transition-colors">联系我们</a>
-            </div>
-
-            <p className="text-xs text-arcana-gray-dark">
-              © 2025 彩虹奥秘 版权所有
-            </p>
+            <PillButton href="#" primary>下载 App</PillButton>
           </div>
-          <p className="mt-4 text-xs text-arcana-gray-dark text-center">
-            桂ICP备2025071572号
-          </p>
+        </section>
+      </main>
+
+      <footer className="relative border-t border-white/70 bg-white/40 px-6 py-12">
+        <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-6 md:flex-row">
+          <div className="flex items-center gap-2">
+            <span className="flex h-9 w-9 items-center justify-center rounded-full bg-arcana-gold/10 text-arcana-gold">
+              <SparkleIcon />
+            </span>
+            <span className="font-semibold text-arcana-cream">彩虹奥秘</span>
+          </div>
+
+          <div className="flex flex-wrap items-center justify-center gap-5 text-sm text-arcana-gray">
+            <a href="/privacy" className="hover:text-arcana-cream">隐私政策</a>
+            <a href="/terms" className="hover:text-arcana-cream">服务条款</a>
+            <a href="#faq" className="hover:text-arcana-cream">常见问题</a>
+          </div>
+
+          <div className="text-center text-xs text-arcana-gray-dark md:text-right">
+            <p>© 2025 彩虹奥秘 版权所有</p>
+            <p className="mt-1">桂ICP备2025071572号</p>
+          </div>
         </div>
       </footer>
+
+      <div className="fixed bottom-4 left-4 right-4 z-40 md:hidden">
+        <a href="#download" className="flex h-12 items-center justify-center rounded-full bg-arcana-gold text-sm font-semibold text-white shadow-lg shadow-arcana-gold/25">
+          下载 App
+        </a>
+      </div>
     </div>
   );
 }
