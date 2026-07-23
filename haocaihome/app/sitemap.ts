@@ -1,11 +1,8 @@
 import type { MetadataRoute } from "next";
 import { getAvailableMBTIDailyParams } from "@/lib/mbtiDailyContent";
+import { getSiteUrl } from "@/lib/seo";
 
 export const dynamic = "force-dynamic";
-
-function getSiteUrl() {
-  return (process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000").replace(/\/$/, "");
-}
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const siteUrl = getSiteUrl();

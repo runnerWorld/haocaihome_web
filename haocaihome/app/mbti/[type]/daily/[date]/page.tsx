@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getAvailableMBTIDailyParams, getMBTIDailyRecord } from "@/lib/mbtiDailyContent";
 import { getMBTIType } from "@/lib/mbtiTypes";
+import { getAbsoluteUrl, jsonLdScript } from "@/lib/seo";
 
 type PageProps = {
   params: Promise<{
@@ -27,6 +28,24 @@ export async function generateMetadata({ params }: PageProps) {
   return {
     title: record.content.seo_title,
     description: record.content.meta_description,
+    alternates: {
+      canonical: getAbsoluteUrl(`/mbti/${type.toLowerCase()}/daily/${date}`),
+    },
+    openGraph: {
+      title: record.content.seo_title,
+      description: record.content.meta_description,
+      url: getAbsoluteUrl(`/mbti/${type.toLowerCase()}/daily/${date}`),
+      siteName: "彩虹奥秘",
+      locale: record.locale === "zh-TW" ? "zh_TW" : "zh_CN",
+      type: "article",
+      publishedTime: record.generated_at,
+      modifiedTime: record.generated_at,
+    },
+    twitter: {
+      card: "summary",
+      title: record.content.seo_title,
+      description: record.content.meta_description,
+    },
   };
 }
 
@@ -46,9 +65,44 @@ export default async function MBTIDailyPage({ params }: PageProps) {
     ["爱情运", record.content.love],
     ["人际相处", record.content.relationship],
   ];
+  const pageUrl = getAbsoluteUrl(`/mbti/${mbtiType.code.toLowerCase()}/daily/${date}`);
+  const articleJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: record.content.h1,
+    description: record.content.meta_description,
+    url: pageUrl,
+    datePublished: record.generated_at,
+    dateModified: record.generated_at,
+    inLanguage: record.locale === "zh-TW" ? "zh-TW" : "zh-CN",
+    author: {
+      "@type": "Organization",
+      name: "彩虹奥秘",
+    },
+    publisher: {
+      "@type": "Organization",
+      name: "彩虹奥秘",
+    },
+    mainEntityOfPage: pageUrl,
+    keywords: [...record.content.seo_keywords, ...(record.content.topic_keywords ?? record.content.geo_keywords ?? [])].join(", "),
+  };
+  const faqJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: record.content.faq.map((item) => ({
+      "@type": "Question",
+      name: item.question,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: item.answer,
+      },
+    })),
+  };
 
   return (
     <main className="min-h-screen bg-arcana-charcoal px-5 py-12 text-arcana-cream">
+      <script type="application/ld+json" dangerouslySetInnerHTML={jsonLdScript(articleJsonLd)} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={jsonLdScript(faqJsonLd)} />
       <article className="mx-auto max-w-4xl">
         <div className="mb-8 flex flex-wrap items-center gap-4 text-sm">
           <Link href="/" className="font-medium text-arcana-gray hover:text-arcana-gold">

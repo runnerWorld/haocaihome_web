@@ -1,18 +1,47 @@
 import Link from "next/link";
 import { getMBTIDailyIndexItems } from "@/lib/mbtiDailyContent";
+import { getAbsoluteUrl, jsonLdScript } from "@/lib/seo";
 
 export const metadata = {
   title: "MBTI 今日运势 - 16 型人格每日工作学习爱情分析",
   description: "查看 16 型人格每日运势，包含工作、学习、爱情、人际相处分析与今日行动建议。",
+  alternates: {
+    canonical: getAbsoluteUrl("/mbti"),
+  },
+  openGraph: {
+    title: "MBTI 今日运势 - 16 型人格每日工作学习爱情分析",
+    description: "查看 16 型人格每日运势，包含工作、学习、爱情、人际相处分析与今日行动建议。",
+    url: getAbsoluteUrl("/mbti"),
+    siteName: "彩虹奥秘",
+    locale: "zh_CN",
+    type: "website",
+  },
+  twitter: {
+    card: "summary",
+    title: "MBTI 今日运势",
+    description: "16 型人格每日工作、学习、爱情和人际相处分析。",
+  },
 };
 
 export const dynamic = "force-dynamic";
 
 export default function MBTIIndexPage() {
   const items = getMBTIDailyIndexItems();
+  const itemListJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name: "MBTI 今日运势",
+    itemListElement: items.map((item, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      name: `${item.code} ${item.name}`,
+      url: item.latestDate ? getAbsoluteUrl(`/mbti/${item.code.toLowerCase()}/daily/${item.latestDate}`) : getAbsoluteUrl("/mbti"),
+    })),
+  };
 
   return (
     <main className="min-h-screen bg-arcana-charcoal px-5 py-12 text-arcana-cream">
+      <script type="application/ld+json" dangerouslySetInnerHTML={jsonLdScript(itemListJsonLd)} />
       <div className="mx-auto max-w-6xl">
         <Link href="/" className="mb-8 inline-flex text-sm font-medium text-arcana-gray hover:text-arcana-gold">
           返回首页
