@@ -44,7 +44,12 @@ relationship, lucky_color, lucky_number, today_advice, topic_keywords, seo_keywo
 }
 
 function stripJsonFence(content) {
-  return content.trim().replace(/^```(?:json)?/i, "").replace(/```$/i, "").trim();
+  const withoutFence = content.trim().replace(/^```(?:json)?/i, "").replace(/```$/i, "").trim();
+  const start = withoutFence.indexOf("{");
+  const end = withoutFence.lastIndexOf("}");
+  const jsonLike = start >= 0 && end > start ? withoutFence.slice(start, end + 1) : withoutFence;
+
+  return jsonLike.replace(/[\u0000-\u001F]/g, "");
 }
 
 function getDeepSeekAPIKey() {
@@ -78,6 +83,7 @@ async function main() {
     },
     body: JSON.stringify({
       model: process.env.DEEPSEEK_MODEL ?? "deepseek-v4-flash",
+      response_format: { type: "json_object" },
       messages: [
         {
           role: "system",

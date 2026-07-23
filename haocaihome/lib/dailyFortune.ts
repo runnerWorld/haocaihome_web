@@ -127,6 +127,7 @@ export async function generateDailyFortune(request: DailyFortuneRequest): Promis
     },
     body: JSON.stringify({
       model: process.env.DEEPSEEK_MODEL ?? DEFAULT_MODEL,
+      response_format: { type: "json_object" },
       messages: [
         {
           role: "system",
@@ -163,16 +164,25 @@ export function getDeepSeekAPIKey() {
 }
 
 export function parseDailyFortuneContent(content: string): DailyFortuneContent {
-  const normalized = content
-    .trim()
-    .replace(/^```(?:json)?/i, "")
-    .replace(/```$/i, "")
-    .trim();
+  const normalized = normalizeJsonContent(content);
 
   const parsed = JSON.parse(normalized) as DailyFortuneContent;
 
   validateDailyFortuneContent(parsed);
   return parsed;
+}
+
+function normalizeJsonContent(content: string) {
+  const withoutFence = content
+    .trim()
+    .replace(/^```(?:json)?/i, "")
+    .replace(/```$/i, "")
+    .trim();
+  const start = withoutFence.indexOf("{");
+  const end = withoutFence.lastIndexOf("}");
+  const jsonLike = start >= 0 && end > start ? withoutFence.slice(start, end + 1) : withoutFence;
+
+  return jsonLike.replace(/[\u0000-\u001F]/g, "");
 }
 
 function validateDailyFortuneContent(content: DailyFortuneContent) {
