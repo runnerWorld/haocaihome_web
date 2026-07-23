@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "generate:daily-fortune": "node scripts/generate-daily-fortune.mjs",
+    "generate:mbti-daily": "node scripts/generate-mbti-daily.mjs"
   },
   "dependencies": {
     "framer-motion": "^12.29.2",
