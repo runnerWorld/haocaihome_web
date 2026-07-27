@@ -26,13 +26,36 @@ export function getMBTIDailyRecord(type: string, date: string) {
 export function getLatestMBTIDailyDate() {
   if (!existsSync(DATA_DIR)) return null;
 
-  const dates = readdirSync(DATA_DIR, { withFileTypes: true })
+  const dates = getMBTIDailyDates();
+
+  return dates[0] ?? null;
+}
+
+export function getMBTIDailyDates() {
+  if (!existsSync(DATA_DIR)) return [];
+
+  return readdirSync(DATA_DIR, { withFileTypes: true })
     .filter((entry) => entry.isDirectory() && /^\d{4}-\d{2}-\d{2}$/.test(entry.name))
     .map((entry) => entry.name)
     .sort()
     .reverse();
+}
 
-  return dates[0] ?? null;
+export function getMBTIDailyAdjacentDates(type: string, date: string) {
+  const mbtiType = getMBTIType(type);
+  if (!mbtiType) return { previousDate: null, nextDate: null };
+
+  const dates = getMBTIDailyDates()
+    .filter((item) => existsSync(path.join(DATA_DIR, item, `${mbtiType.code.toLowerCase()}.json`)))
+    .sort();
+  const index = dates.indexOf(date);
+
+  if (index < 0) return { previousDate: null, nextDate: null };
+
+  return {
+    previousDate: dates[index - 1] ?? null,
+    nextDate: dates[index + 1] ?? null,
+  };
 }
 
 export function getAvailableMBTIDailyParams() {

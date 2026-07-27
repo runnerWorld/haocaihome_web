@@ -19,12 +19,31 @@ export type DailyFortuneContent = {
   meta_description: string;
   slug: string;
   h1: string;
+  daily_theme?: string;
+  hook?: string;
+  quick_summary?: {
+    keywords: string[];
+    suitable: string;
+    avoid: string;
+    action: string;
+  };
+  stuck_moment?: string;
+  one_sentence_advice?: string;
   intro: string;
   overall: string;
   work: string;
   study: string;
   love: string;
   relationship: string;
+  card_prompt?: {
+    title: string;
+    body: string;
+    cards: Array<{
+      name: string;
+      meaning: string;
+    }>;
+  };
+  app_cta?: string;
   lucky_color: string;
   lucky_number: string;
   today_advice: string;
@@ -81,12 +100,30 @@ JSON 字段必须完全如下：
   "meta_description": "",
   "slug": "",
   "h1": "",
+  "daily_theme": "",
+  "hook": "",
+  "quick_summary": {
+    "keywords": [],
+    "suitable": "",
+    "avoid": "",
+    "action": ""
+  },
+  "stuck_moment": "",
+  "one_sentence_advice": "",
   "intro": "",
   "overall": "",
   "work": "",
   "study": "",
   "love": "",
   "relationship": "",
+  "card_prompt": {
+    "title": "",
+    "body": "",
+    "cards": [
+      {"name": "", "meaning": ""}
+    ]
+  },
+  "app_cta": "",
   "lucky_color": "",
   "lucky_number": "",
   "today_advice": "",
@@ -98,13 +135,20 @@ JSON 字段必须完全如下：
 }
 
 内容要求：
-1. 适合直接发布到网站或 App 内容页。
-2. 不要声称百分百准确，不要制造恐惧。
+1. 适合直接发布到网站或 App 内容页，面向搜索“${persona.mbti ?? "MBTI"} 今日运势”的用户。
+2. 不要写明日运势，不要预测具体灾祸，不要声称百分百准确。
 3. 不要给医疗、法律、投资保证。
 4. 自然包含人格词、今日运势、工作运、学习运、爱情运、人际关系等关键词，不要强行加入城市或地区词。
-5. FAQ 至少 3 条。
-6. slug 使用小写英文、数字和连字符。
-7. 每个分析段落给出可执行建议，不要空泛。
+5. daily_theme 必须是当天主题，不要泛泛写“整理思路”。示例：先行动五分钟、少解释多确认、先收一个尾、把沉默变成一句回应。
+6. hook 要像真人开场，写出用户今天可能遇到的具体心理或生活场景，不要以“今天适合”开头。
+7. quick_summary.keywords 给 3 个短词；suitable、avoid、action 都要具体，action 必须是一个立刻能做的小动作。
+8. stuck_moment 写“今天最容易卡住的瞬间”，必须有画面感，例如打开资料 40 分钟却没开始、想回复消息却反复删改。
+9. work、study、love、relationship 每段都要包含一个真实场景和一个动作。爱情或人际段落至少给一句可复制的话术。
+10. card_prompt 连接好彩虹 App 的心情卡体验，给 3 张可能抽到的塔罗牌及其含义。
+11. app_cta 不能硬广，要自然引导用户打开好彩虹，抽今日心情卡并继续问 AI 下一步。
+12. FAQ 至少 5 条，问题要像搜索问题，例如“${persona.mbti ?? "MBTI"} 今天适合主动联系别人吗？”。
+13. slug 使用小写英文、数字和连字符。
+14. 避免同一 MBTI 每天重复同一套说法；不要只反复讲人格标签，要写“今天有什么不同”。
 `.trim();
 }
 

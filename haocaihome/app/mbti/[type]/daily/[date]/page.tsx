@@ -1,7 +1,8 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getAvailableMBTIDailyParams, getMBTIDailyRecord } from "@/lib/mbtiDailyContent";
-import { getMBTIType } from "@/lib/mbtiTypes";
+import { getAvailableMBTIDailyParams, getMBTIDailyAdjacentDates, getMBTIDailyRecord } from "@/lib/mbtiDailyContent";
+import { MBTI_TYPES, getMBTIType, type MBTIType } from "@/lib/mbtiTypes";
+import type { DailyFortuneContent } from "@/lib/dailyFortune";
 import { getAbsoluteUrl, jsonLdScript } from "@/lib/seo";
 
 type PageProps = {
@@ -10,6 +11,35 @@ type PageProps = {
     date: string;
   }>;
 };
+
+const appStoreUrl = "https://apps.apple.com/app/id6759077138";
+
+function getQuickSummary(content: DailyFortuneContent, mbtiType: MBTIType) {
+  return {
+    keywords: content.quick_summary?.keywords?.length ? content.quick_summary.keywords.slice(0, 3) : ["清晰", "边界", "小行动"],
+    suitable: content.quick_summary?.suitable ?? `把${mbtiType.focus}里的一个重点写清楚。`,
+    avoid: content.quick_summary?.avoid ?? "反复停在脑内推演，却没有给现实一个反馈。",
+    action: content.quick_summary?.action ?? content.one_sentence_advice ?? content.today_advice,
+  };
+}
+
+function getCardPrompt(content: DailyFortuneContent) {
+  return (
+    content.card_prompt ?? {
+      title: "今日心情卡提示",
+      body: "如果你想把今天的提醒变成更贴近自己的解读，可以先标记此刻心情，再抽一张牌观察它回应的是哪一部分状态。",
+      cards: [
+        { name: "星星", meaning: "把注意力放回希望和长期方向。" },
+        { name: "节制", meaning: "先降低强度，把事情拆成更小一步。" },
+        { name: "隐士", meaning: "留一点安静时间，听清楚自己的真实判断。" },
+      ],
+    }
+  );
+}
+
+function getRelatedTypes(mbtiType: MBTIType, date: string) {
+  return MBTI_TYPES.filter((item) => item.code !== mbtiType.code && item.code[0] === mbtiType.code[0] && getMBTIDailyRecord(item.code, date)).slice(0, 3);
+}
 
 export function generateStaticParams() {
   return getAvailableMBTIDailyParams();
@@ -60,6 +90,13 @@ export default async function MBTIDailyPage({ params }: PageProps) {
     notFound();
   }
 
+  const quickSummary = getQuickSummary(record.content, mbtiType);
+  const cardPrompt = getCardPrompt(record.content);
+  const relatedTypes = getRelatedTypes(mbtiType, date);
+  const { previousDate, nextDate } = getMBTIDailyAdjacentDates(mbtiType.code, date);
+  const appCta =
+    record.content.app_cta ??
+    `想把今天的提醒变成你的专属解读？打开好彩虹，先抽一张今日心情卡，再继续问 AI：${mbtiType.code} 今天下一步该怎么做？`;
   const sections = [
     ["今日总运", record.content.overall],
     ["工作运", record.content.work],
@@ -122,26 +159,58 @@ export default async function MBTIDailyPage({ params }: PageProps) {
             <span className="rounded-full bg-white px-3 py-1 text-xs font-semibold text-arcana-gray">{date}</span>
           </div>
           <h1 className="mb-5 text-4xl font-bold leading-tight sm:text-5xl">{record.content.h1}</h1>
-          <p className="text-lg leading-relaxed text-arcana-gray">{record.content.intro}</p>
+          <p className="text-lg leading-relaxed text-arcana-gray">{record.content.hook ?? record.content.intro}</p>
         </header>
 
         <section className="mb-8 rounded-2xl border border-arcana-gold/15 bg-white/70 p-6 shadow-sm">
-          <h2 className="mb-3 text-2xl font-bold">{mbtiType.code} 今日运势和性格关联说明</h2>
-          <p className="mb-4 text-base leading-relaxed text-arcana-gray">
-            {mbtiType.code} 的每日分析会先参考「{mbtiType.audience}」这一类人格画像，再把重点落到今天的工作、学习、爱情和人际场景。它和性格的关联并不是绝对预测，而是把长期偏好转成当天更容易执行的提醒。
+          <div className="mb-5 flex flex-wrap items-start justify-between gap-4">
+            <div>
+              <p className="mb-2 text-sm font-semibold text-arcana-gold">今日主题</p>
+              <h2 className="text-2xl font-bold">{record.content.daily_theme ?? `${mbtiType.code} 今日运势和性格有什么关系？`}</h2>
+            </div>
+            <span className="rounded-full bg-white px-3 py-1 text-xs font-semibold text-arcana-gray">{mbtiType.title}</span>
+          </div>
+          <p className="mb-5 text-base leading-relaxed text-arcana-gray">
+            {record.content.one_sentence_advice ??
+              `${mbtiType.code} 的今日运势不是给你贴标签，而是把${mbtiType.name}型常见的节奏和今天的具体场景连起来，帮你找到一个能马上开始的小动作。`}
           </p>
           <div className="grid gap-3 md:grid-cols-3">
             <div className="rounded-2xl bg-white p-4 shadow-sm">
-              <h3 className="mb-2 text-lg font-semibold">人格底色</h3>
+              <h3 className="mb-2 text-lg font-semibold">人格重点</h3>
               <p className="text-sm leading-relaxed text-arcana-gray">{mbtiType.focus}</p>
             </div>
             <div className="rounded-2xl bg-white p-4 shadow-sm">
-              <h3 className="mb-2 text-lg font-semibold">今日场景</h3>
-              <p className="text-sm leading-relaxed text-arcana-gray">结合当天内容，分别观察工作推进、学习吸收、爱情表达和人际边界。</p>
+              <h3 className="mb-2 text-lg font-semibold">今日观察</h3>
+              <p className="text-sm leading-relaxed text-arcana-gray">{quickSummary.suitable}</p>
             </div>
             <div className="rounded-2xl bg-white p-4 shadow-sm">
               <h3 className="mb-2 text-lg font-semibold">行动提醒</h3>
-              <p className="text-sm leading-relaxed text-arcana-gray">把人格倾向落到一句今天可执行的建议，帮助你复盘而不是被标签限制。</p>
+              <p className="text-sm leading-relaxed text-arcana-gray">{quickSummary.action}</p>
+            </div>
+          </div>
+        </section>
+
+        <section className="mb-8 rounded-2xl bg-arcana-charcoal-light p-6 shadow-sm">
+          <h2 className="mb-4 text-2xl font-bold">今日 {mbtiType.code} 快速摘要</h2>
+          <div className="mb-5 flex flex-wrap gap-2">
+            {quickSummary.keywords.map((keyword) => (
+              <span key={keyword} className="rounded-full bg-white px-3 py-1 text-xs font-semibold text-arcana-gold">
+                {keyword}
+              </span>
+            ))}
+          </div>
+          <div className="grid gap-3 md:grid-cols-3">
+            <div>
+              <h3 className="mb-2 text-base font-semibold">适合</h3>
+              <p className="text-sm leading-relaxed text-arcana-gray">{quickSummary.suitable}</p>
+            </div>
+            <div>
+              <h3 className="mb-2 text-base font-semibold">避免</h3>
+              <p className="text-sm leading-relaxed text-arcana-gray">{quickSummary.avoid}</p>
+            </div>
+            <div>
+              <h3 className="mb-2 text-base font-semibold">现在就做</h3>
+              <p className="text-sm leading-relaxed text-arcana-gray">{quickSummary.action}</p>
             </div>
           </div>
         </section>
@@ -161,6 +230,14 @@ export default async function MBTIDailyPage({ params }: PageProps) {
           </div>
         </section>
 
+        <section className="mb-8 rounded-2xl border border-arcana-gold/15 bg-white/70 p-6 shadow-sm">
+          <h2 className="mb-3 text-2xl font-bold">今天最容易卡住的瞬间</h2>
+          <p className="text-base leading-relaxed text-arcana-gray">
+            {record.content.stuck_moment ??
+              `你知道自己应该处理${mbtiType.focus.split("、")[0]}，却迟迟没有把它变成一个具体动作。今天先不要追求完整答案，先把第一个入口打开。`}
+          </p>
+        </section>
+
         <section className="mb-8 space-y-4">
           {sections.map(([title, body]) => (
             <section key={title} className="rounded-2xl border border-arcana-gold/15 bg-white/70 p-6 shadow-sm">
@@ -175,6 +252,30 @@ export default async function MBTIDailyPage({ params }: PageProps) {
           <p className="text-base leading-relaxed text-arcana-gray">{record.content.today_advice}</p>
         </section>
 
+        <section className="mb-8 rounded-2xl border border-arcana-gold/15 bg-white/70 p-6 shadow-sm">
+          <h2 className="mb-3 text-2xl font-bold">{cardPrompt.title}</h2>
+          <p className="mb-5 text-base leading-relaxed text-arcana-gray">{cardPrompt.body}</p>
+          <div className="grid gap-3 md:grid-cols-3">
+            {cardPrompt.cards.slice(0, 3).map((card) => (
+              <div key={card.name} className="rounded-2xl bg-white p-4 shadow-sm">
+                <h3 className="mb-2 text-lg font-semibold text-arcana-gold">{card.name}</h3>
+                <p className="text-sm leading-relaxed text-arcana-gray">{card.meaning}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <section className="mb-8 rounded-2xl bg-arcana-charcoal-light p-6 shadow-sm">
+          <h2 className="mb-3 text-2xl font-bold">把今天的提醒继续聊下去</h2>
+          <p className="mb-5 text-base leading-relaxed text-arcana-gray">{appCta}</p>
+          <a
+            href={appStoreUrl}
+            className="inline-flex h-12 items-center justify-center rounded-full bg-arcana-gold px-6 text-sm font-semibold text-white shadow-md shadow-arcana-gold/20 transition-all hover:-translate-y-0.5"
+          >
+            打开好彩虹抽今日心情卡
+          </a>
+        </section>
+
         <section className="mb-8">
           <h2 className="mb-4 text-2xl font-bold">常见问题</h2>
           <div className="space-y-3">
@@ -187,12 +288,28 @@ export default async function MBTIDailyPage({ params }: PageProps) {
           </div>
         </section>
 
-        <section className="flex flex-wrap gap-2">
-          {[...record.content.seo_keywords, ...(record.content.topic_keywords ?? record.content.geo_keywords ?? [])].map((keyword) => (
-            <span key={keyword} className="rounded-full bg-white px-3 py-1 text-xs font-medium text-arcana-gray">
-              {keyword}
-            </span>
-          ))}
+        <section className="rounded-2xl border border-arcana-gold/15 bg-white/70 p-6 shadow-sm">
+          <h2 className="mb-4 text-2xl font-bold">继续查看 MBTI 今日运势</h2>
+          <div className="flex flex-wrap gap-3">
+            {previousDate ? (
+              <Link href={`/mbti/${mbtiType.code.toLowerCase()}/daily/${previousDate}`} className="rounded-full bg-white px-4 py-2 text-sm font-semibold text-arcana-gray hover:text-arcana-gold">
+                查看 {previousDate} {mbtiType.code} 运势
+              </Link>
+            ) : null}
+            {nextDate ? (
+              <Link href={`/mbti/${mbtiType.code.toLowerCase()}/daily/${nextDate}`} className="rounded-full bg-white px-4 py-2 text-sm font-semibold text-arcana-gray hover:text-arcana-gold">
+                查看 {nextDate} {mbtiType.code} 运势
+              </Link>
+            ) : null}
+            {relatedTypes.map((item) => (
+              <Link key={item.code} href={`/mbti/${item.code.toLowerCase()}/daily/${date}`} className="rounded-full bg-white px-4 py-2 text-sm font-semibold text-arcana-gray hover:text-arcana-gold">
+                {item.code} 今日运势
+              </Link>
+            ))}
+            <Link href="/mbti" className="rounded-full bg-arcana-gold px-4 py-2 text-sm font-semibold text-white">
+              查看全部 16 型人格
+            </Link>
+          </div>
         </section>
       </article>
     </main>
