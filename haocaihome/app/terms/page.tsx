@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: '服务条款 / Terms of Service | 彩虹奥秘 Rainbow Arcana',
+  title: '服务条款 / Terms of Service | 好彩虹 Rainbow Arcana',
   description: 'Read Rainbow Arcana terms for iOS and Android — your rights and obligations.',
 };
 
@@ -44,7 +44,7 @@ export default function TermsPage() {
             <p className="opacity-80">Effective date: February 15, 2026</p>
           </div>
           <BilingualBlock
-            zh="感谢选择「彩虹奥秘」（Rainbow Arcana）。使用我们的 iOS 与 Android 应用即表示您同意本条款。请在下载或使用前仔细阅读。如您不同意，请立即停止使用并卸载应用。"
+            zh="感谢选择「好彩虹」（Rainbow Arcana）。使用我们的 iOS 与 Android 应用即表示您同意本条款。请在下载或使用前仔细阅读。如您不同意，请立即停止使用并卸载应用。"
             en="Thank you for choosing “Rainbow Arcana.” By using our iOS or Android app you agree to these terms. Please read them before downloading or using; if you disagree, stop and uninstall."
           />
         </div>

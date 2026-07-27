@@ -18,6 +18,7 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }: PageProps) {
   const { type, date } = await params;
   const record = getMBTIDailyRecord(type, date);
+  const mbtiType = getMBTIType(type);
 
   if (!record) {
     return {
@@ -28,6 +29,7 @@ export async function generateMetadata({ params }: PageProps) {
   return {
     title: record.content.seo_title,
     description: record.content.meta_description,
+    keywords: [...record.content.seo_keywords, mbtiType?.code, `${mbtiType?.code} 今日运势`, "MBTI 性格关联", "MBTI 每日分析"].filter(Boolean),
     alternates: {
       canonical: getAbsoluteUrl(`/mbti/${type.toLowerCase()}/daily/${date}`),
     },
@@ -35,7 +37,7 @@ export async function generateMetadata({ params }: PageProps) {
       title: record.content.seo_title,
       description: record.content.meta_description,
       url: getAbsoluteUrl(`/mbti/${type.toLowerCase()}/daily/${date}`),
-      siteName: "彩虹奥秘",
+      siteName: "好彩虹",
       locale: record.locale === "zh-TW" ? "zh_TW" : "zh_CN",
       type: "article",
       publishedTime: record.generated_at,
@@ -77,11 +79,11 @@ export default async function MBTIDailyPage({ params }: PageProps) {
     inLanguage: record.locale === "zh-TW" ? "zh-TW" : "zh-CN",
     author: {
       "@type": "Organization",
-      name: "彩虹奥秘",
+      name: "好彩虹",
     },
     publisher: {
       "@type": "Organization",
-      name: "彩虹奥秘",
+      name: "好彩虹",
     },
     mainEntityOfPage: pageUrl,
     keywords: [...record.content.seo_keywords, ...(record.content.topic_keywords ?? record.content.geo_keywords ?? [])].join(", "),
@@ -122,6 +124,27 @@ export default async function MBTIDailyPage({ params }: PageProps) {
           <h1 className="mb-5 text-4xl font-bold leading-tight sm:text-5xl">{record.content.h1}</h1>
           <p className="text-lg leading-relaxed text-arcana-gray">{record.content.intro}</p>
         </header>
+
+        <section className="mb-8 rounded-2xl border border-arcana-gold/15 bg-white/70 p-6 shadow-sm">
+          <h2 className="mb-3 text-2xl font-bold">{mbtiType.code} 今日运势和性格关联说明</h2>
+          <p className="mb-4 text-base leading-relaxed text-arcana-gray">
+            {mbtiType.code} 的每日分析会先参考「{mbtiType.audience}」这一类人格画像，再把重点落到今天的工作、学习、爱情和人际场景。它和性格的关联并不是绝对预测，而是把长期偏好转成当天更容易执行的提醒。
+          </p>
+          <div className="grid gap-3 md:grid-cols-3">
+            <div className="rounded-2xl bg-white p-4 shadow-sm">
+              <h3 className="mb-2 text-lg font-semibold">人格底色</h3>
+              <p className="text-sm leading-relaxed text-arcana-gray">{mbtiType.focus}</p>
+            </div>
+            <div className="rounded-2xl bg-white p-4 shadow-sm">
+              <h3 className="mb-2 text-lg font-semibold">今日场景</h3>
+              <p className="text-sm leading-relaxed text-arcana-gray">结合当天内容，分别观察工作推进、学习吸收、爱情表达和人际边界。</p>
+            </div>
+            <div className="rounded-2xl bg-white p-4 shadow-sm">
+              <h3 className="mb-2 text-lg font-semibold">行动提醒</h3>
+              <p className="text-sm leading-relaxed text-arcana-gray">把人格倾向落到一句今天可执行的建议，帮助你复盘而不是被标签限制。</p>
+            </div>
+          </div>
+        </section>
 
         <section className="mb-8 grid gap-3 sm:grid-cols-3">
           <div className="ios-glass rounded-2xl p-5">

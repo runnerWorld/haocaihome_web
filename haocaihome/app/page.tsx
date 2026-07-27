@@ -1,5 +1,7 @@
 'use client';
 
+import { useState } from 'react';
+import Link from 'next/link';
 import { motion } from 'framer-motion';
 import StarField from '@/components/StarField';
 import GlowOrb from '@/components/GlowOrb';
@@ -42,7 +44,7 @@ const BraceletIcon = () => (
 
 const navItems = [
   { label: '彩虹心情', href: '#rainbow-mood' },
-  { label: 'MBTI', href: '#mbti' },
+  { label: 'MBTI', href: '/mbti' },
   { label: 'AI 问答', href: '#ai-chat' },
   { label: '在线 Shop', href: '#shop' },
 ];
@@ -61,7 +63,7 @@ const featureCards = [
     title: 'MBTI 守护牌',
     body: '完成轻量人格测试，获得类型、守护塔罗与 AI 个性解读。',
     icon: <SparkleIcon />,
-    href: '#mbti',
+    href: '/mbti',
   },
   {
     title: 'AI 继续追问',
@@ -72,11 +74,41 @@ const featureCards = [
 ];
 
 const moods = [
-  { label: '开心', tone: 'bg-[#FDC7D0]' },
-  { label: '平静', tone: 'bg-[#A3D3F9]' },
-  { label: '焦虑', tone: 'bg-[#E8D6F4]' },
-  { label: '低落', tone: 'bg-[#F8F6F1]' },
-  { label: '期待', tone: 'bg-[#FF8F61]' },
+  {
+    label: '开心',
+    tone: 'bg-[#FDC7D0]',
+    card: '太阳',
+    advice: '把这份轻盈分享给一个具体的人，也为自己保留一点安静的恢复时间。',
+    prompt: '我今天开心，适合把好运用在哪件事上？',
+  },
+  {
+    label: '平静',
+    tone: 'bg-[#A3D3F9]',
+    card: '星星',
+    advice: '适合做长期但不急迫的事：整理计划、确认方向，给未来留一个清楚入口。',
+    prompt: '我现在很平静，今天最值得坚持的方向是什么？',
+  },
+  {
+    label: '焦虑',
+    tone: 'bg-[#E8D6F4]',
+    card: '节制',
+    advice: '先把一个担心写下来，再写出你今天能完成的最小一步。你不需要马上解决全部。',
+    prompt: '我有点焦虑，这张牌想提醒我先处理什么？',
+  },
+  {
+    label: '低落',
+    tone: 'bg-[#F8F6F1]',
+    card: '隐士',
+    advice: '今天先降低对自己的要求，完成一件能恢复秩序的小事，再决定下一步。',
+    prompt: '我今天低落，怎样和这份情绪相处？',
+  },
+  {
+    label: '期待',
+    tone: 'bg-[#FF8F61]',
+    card: '命运之轮',
+    advice: '保留期待，但把行动落到一个可验证的选择上，让机会有地方发生。',
+    prompt: '我很期待接下来的变化，应该主动做什么？',
+  },
 ];
 
 const shopProducts = [
@@ -106,7 +138,7 @@ const shopProducts = [
 const faqData = [
   {
     question: '这是算命吗？',
-    answer: '不是。彩虹奥秘更接近情绪记录、象征解读和自我反思工具。它不会替你决定命运，而是帮你把当下状态整理成一句温柔的行动提醒。',
+    answer: '不是。好彩虹更接近情绪记录、象征解读和自我反思工具。它不会替你决定命运，而是帮你把当下状态整理成一句温柔的行动提醒。',
   },
   {
     question: 'MBTI 和塔罗怎么结合？',
@@ -160,6 +192,14 @@ const DownloadPillButton = ({ children }: { children: React.ReactNode }) => (
 );
 
 export default function Home() {
+  const [selectedMood, setSelectedMood] = useState(moods[2]);
+  const [isCardRevealed, setIsCardRevealed] = useState(false);
+
+  const selectMood = (mood: (typeof moods)[number]) => {
+    setSelectedMood(mood);
+    setIsCardRevealed(false);
+  };
+
   return (
     <div className="relative min-h-screen overflow-hidden bg-arcana-charcoal text-arcana-cream grain-overlay vignette-overlay">
       <StarField count={18} />
@@ -170,7 +210,7 @@ export default function Home() {
             <span className="flex h-9 w-9 items-center justify-center rounded-full bg-arcana-gold/12 text-arcana-gold">
               <SparkleIcon />
             </span>
-            <span className="text-sm font-semibold text-arcana-cream">彩虹奥秘</span>
+            <span className="text-sm font-semibold text-arcana-cream">好彩虹</span>
           </a>
 
           <div className="hidden items-center gap-1 md:flex">
@@ -230,7 +270,7 @@ export default function Home() {
                   <div className="mb-4 flex items-center justify-between">
                     <div>
                       <p className="text-xs text-arcana-gray-dark">Today</p>
-                      <p className="text-xl font-bold text-arcana-cream">彩虹奥秘</p>
+                      <p className="text-xl font-bold text-arcana-cream">好彩虹</p>
                     </div>
                     <span className="rounded-full bg-white px-3 py-1 text-xs font-medium text-arcana-gold shadow-sm">已匹配</span>
                   </div>
@@ -321,22 +361,45 @@ export default function Home() {
             >
               <div className="mb-4 grid grid-cols-2 gap-3 sm:grid-cols-5">
                 {moods.map((mood) => (
-                  <div key={mood.label} className="rounded-3xl bg-white p-3 text-center shadow-sm">
+                  <button
+                    key={mood.label}
+                    type="button"
+                    onClick={() => selectMood(mood)}
+                    className={`rounded-3xl bg-white p-3 text-center shadow-sm transition-all hover:-translate-y-0.5 ${
+                      selectedMood.label === mood.label ? 'ring-2 ring-arcana-gold' : 'ring-1 ring-transparent'
+                    }`}
+                    aria-pressed={selectedMood.label === mood.label}
+                  >
                     <div className={`mx-auto mb-2 h-11 w-11 rounded-full ${mood.tone} border border-white/80`} />
                     <p className="text-sm font-medium text-arcana-cream">{mood.label}</p>
-                  </div>
+                  </button>
                 ))}
               </div>
 
               <div className="rounded-3xl bg-white p-5 shadow-sm">
-                <p className="mb-1 text-xs font-medium text-arcana-gray-dark">根据“焦虑”推荐</p>
+                <p className="mb-1 text-xs font-medium text-arcana-gray-dark">根据“{selectedMood.label}”推荐</p>
                 <div className="mb-4 flex items-center justify-between">
-                  <h3 className="text-2xl font-bold text-arcana-cream">节制</h3>
+                  <h3 className="text-2xl font-bold text-arcana-cream">{isCardRevealed ? selectedMood.card : '今日心情牌'}</h3>
                   <span className="rounded-full bg-arcana-gold/10 px-3 py-1 text-xs font-semibold text-arcana-gold">今日行动</span>
                 </div>
                 <p className="text-sm leading-relaxed text-arcana-gray">
-                  先把一个担心写下来，再写出你今天能完成的最小一步。你不需要马上解决全部。
+                  {isCardRevealed ? selectedMood.advice : '先标记此刻心情，再抽一张牌，得到更贴近当下状态的提醒。'}
                 </p>
+                {isCardRevealed ? (
+                  <div className="mt-5 rounded-2xl bg-[#F8F6F1] p-4">
+                    <p className="mb-2 text-xs font-semibold text-arcana-gold">继续聊天</p>
+                    <p className="mb-4 text-sm leading-relaxed text-arcana-gray">{selectedMood.prompt}</p>
+                    <DownloadPillButton>下载 iOS 继续问 AI</DownloadPillButton>
+                  </div>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => setIsCardRevealed(true)}
+                    className="mt-5 inline-flex h-12 items-center justify-center rounded-full bg-arcana-gold px-6 text-sm font-semibold text-white shadow-md shadow-arcana-gold/20 transition-all hover:-translate-y-0.5"
+                  >
+                    抽一张今日心情牌
+                  </button>
+                )}
               </div>
             </motion.div>
           </div>
@@ -345,6 +408,14 @@ export default function Home() {
         <section id="mbti" className="relative scroll-mt-28 px-6 py-20 md:py-28">
           <div className="mx-auto max-w-6xl">
             <SectionTitle title="MBTI 守护牌" subtitle="用人格测试打开长期自我理解，再由塔罗补上当下提醒" />
+            <div className="mb-6 flex justify-center">
+              <Link
+                href="/mbti"
+                className="inline-flex h-12 items-center justify-center rounded-full bg-arcana-gold px-6 text-sm font-semibold text-white shadow-md shadow-arcana-gold/20 transition-all hover:-translate-y-0.5"
+              >
+                查看 16 型人格今日运势
+              </Link>
+            </div>
 
             <div className="grid gap-6 lg:grid-cols-[1.05fr_0.95fr]">
               <motion.div
@@ -513,7 +584,7 @@ export default function Home() {
             </div>
             <h2 className="mb-4 text-3xl font-bold text-arcana-cream md:text-4xl">把每天的提醒收进口袋</h2>
             <p className="mx-auto mb-8 max-w-md text-base leading-relaxed text-arcana-gray">
-              彩虹奥秘把天气、心情、人格、塔罗和 AI 对话放在一个安静的日常仪式里。
+              好彩虹把天气、心情、人格、塔罗和 AI 对话放在一个安静的日常仪式里。
             </p>
             <DownloadPillButton>下载 App</DownloadPillButton>
           </div>
@@ -526,7 +597,7 @@ export default function Home() {
             <span className="flex h-9 w-9 items-center justify-center rounded-full bg-arcana-gold/10 text-arcana-gold">
               <SparkleIcon />
             </span>
-            <span className="font-semibold text-arcana-cream">彩虹奥秘</span>
+            <span className="font-semibold text-arcana-cream">好彩虹</span>
           </div>
 
           <div className="flex flex-wrap items-center justify-center gap-5 text-sm text-arcana-gray">
@@ -536,7 +607,7 @@ export default function Home() {
           </div>
 
           <div className="text-center text-xs text-arcana-gray-dark md:text-right">
-            <p>© 2025 彩虹奥秘 版权所有</p>
+            <p>© 2025 好彩虹 版权所有</p>
             <p className="mt-1">桂ICP备2025071572号</p>
           </div>
         </div>
