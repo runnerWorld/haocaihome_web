@@ -27,6 +27,24 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "daily",
       priority: 0.9,
     },
+    {
+      url: `${siteUrl}/crystal-necklace-builder`,
+      lastModified: now,
+      changeFrequency: "weekly",
+      priority: 0.9,
+    },
+    {
+      url: `${siteUrl}/crystal-necklace-builder/design`,
+      lastModified: now,
+      changeFrequency: "weekly",
+      priority: 0.7,
+    },
+    {
+      url: `${siteUrl}/crystal-necklace-builder/checkout`,
+      lastModified: now,
+      changeFrequency: "monthly",
+      priority: 0.4,
+    },
     ...mbtiDailyPages,
   ];
 }
