@@ -4,7 +4,7 @@ import { generateDailyFortune, getTodayISO, type DailyFortuneRequest } from "@/l
 export const runtime = "nodejs";
 
 const defaultPersona = {
-  name: "彩虹奥秘温柔理性型",
+  name: "好彩虹温柔理性型",
   audience: "关注感情、工作、学习与自我成长的年轻用户",
   tone: "温柔、具体、有陪伴感，但不要迷信恐吓",
   questionFocus: "工作、学习、爱情、人际相处中的状态分析",

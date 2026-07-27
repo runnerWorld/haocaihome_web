@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: '隐私政策 / Privacy Policy | 彩虹奥秘 Rainbow Arcana',
+  title: '隐私政策 / Privacy Policy | 好彩虹 Rainbow Arcana',
   description: 'Learn how Rainbow Arcana collects, uses, and protects your data on iOS and Android.',
 };
 
@@ -44,7 +44,7 @@ export default function PrivacyPage() {
             <p className="opacity-80">Last updated: February 15, 2026</p>
           </div>
           <BilingualBlock
-            zh="欢迎使用「彩虹奥秘」（Rainbow Arcana）。我们致力于在 iOS 与 Android 平台满足应用商店的隐私要求，并保护您的个人信息安全。本政策说明我们收集哪些数据、如何使用与共享，以及您对数据的控制权。"
+            zh="欢迎使用「好彩虹」（Rainbow Arcana）。我们致力于在 iOS 与 Android 平台满足应用商店的隐私要求，并保护您的个人信息安全。本政策说明我们收集哪些数据、如何使用与共享，以及您对数据的控制权。"
             en="Welcome to “Rainbow Arcana.” We comply with App Store and Google Play privacy requirements on iOS and Android and protect your personal information. This notice explains what we collect, how we use and share it, and the controls you have."
           />
         </div>
