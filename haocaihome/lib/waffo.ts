@@ -8,10 +8,21 @@ import {
 
 function getPrivateKey() {
   if (process.env.WAFFO_PRIVATE_KEY_BASE64) {
-    return Buffer.from(process.env.WAFFO_PRIVATE_KEY_BASE64, "base64").toString("utf-8");
+    return toPemPrivateKey(process.env.WAFFO_PRIVATE_KEY_BASE64);
   }
 
-  return process.env.WAFFO_PRIVATE_KEY?.replace(/\\n/g, "\n");
+  const privateKey = process.env.WAFFO_PRIVATE_KEY?.replace(/\\n/g, "\n");
+  return privateKey ? toPemPrivateKey(privateKey) : undefined;
+}
+
+function toPemPrivateKey(value: string) {
+  if (value.includes("-----BEGIN")) {
+    return value;
+  }
+
+  const keyBody = value.replace(/^"|"$/g, "").replace(/\s+/g, "");
+  const wrappedKey = keyBody.match(/.{1,64}/g)?.join("\n") || keyBody;
+  return `-----BEGIN PRIVATE KEY-----\n${wrappedKey}\n-----END PRIVATE KEY-----`;
 }
 
 export function getWaffoClient() {
