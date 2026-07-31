@@ -18,7 +18,14 @@ type BraceletDesign = {
 
 export default function BraceletCheckout() {
   const [design, setDesign] = useState<BraceletDesign | null>(null);
-  const [status, setStatus] = useState("提交后会保存为待处理订单，之后可接 Stripe Checkout 或后端数据库。");
+  const [customer, setCustomer] = useState({
+    name: "",
+    email: "",
+    address: "",
+    note: "",
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [status, setStatus] = useState("填写信息后会跳转到 Waffo Pancake 测试付款页。");
 
   useEffect(() => {
     const timer = window.setTimeout(() => {
@@ -29,17 +36,47 @@ export default function BraceletCheckout() {
     return () => window.clearTimeout(timer);
   }, []);
 
-  const submitOrder = () => {
+  const updateCustomer = (field: keyof typeof customer, value: string) => {
+    setCustomer((current) => ({ ...current, [field]: value }));
+  };
+
+  const submitOrder = async () => {
     if (!design) return;
+    setIsSubmitting(true);
+    setStatus("正在创建 Waffo Pancake 付款链接...");
+
     const order = {
       id: `order-${Date.now()}`,
       designId: design.id,
       design,
+      customer,
       paymentStatus: "pending",
       createdAt: new Date().toISOString(),
     };
     localStorage.setItem("haocai-bracelet-order", JSON.stringify(order));
-    setStatus("订单已生成并保存。下一步可以接 Stripe Checkout 或提交到数据库。");
+
+    try {
+      const response = await fetch("/api/waffo/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          orderId: order.id,
+          customer,
+          design,
+        }),
+      });
+      const payload = (await response.json()) as { checkoutUrl?: string; error?: string };
+
+      if (!response.ok || !payload.checkoutUrl) {
+        throw new Error(payload.error || "创建付款链接失败");
+      }
+
+      setStatus("付款链接已创建，正在跳转...");
+      window.location.href = payload.checkoutUrl;
+    } catch (error) {
+      setIsSubmitting(false);
+      setStatus(error instanceof Error ? error.message : "创建付款链接失败，请稍后再试。");
+    }
   };
 
   return (
@@ -97,19 +134,53 @@ export default function BraceletCheckout() {
 
           <section className="ios-glass rounded-2xl p-5">
             <h2 className="mb-5 text-3xl font-bold">填写制作与联系信息</h2>
-            <form className="space-y-4">
-              {["姓名", "Email", "地址"].map((label) => (
-                <label key={label} className="block">
-                  <span className="mb-1 block text-sm font-semibold text-arcana-gray">{label}</span>
-                  <input className="h-12 w-full rounded-xl border border-arcana-gold/15 bg-white px-3 text-sm outline-none focus:border-arcana-gold" />
-                </label>
-              ))}
+            <form className="space-y-4" onSubmit={(event) => event.preventDefault()}>
+              <label className="block">
+                <span className="mb-1 block text-sm font-semibold text-arcana-gray">姓名</span>
+                <input
+                  value={customer.name}
+                  onChange={(event) => updateCustomer("name", event.target.value)}
+                  className="h-12 w-full rounded-xl border border-arcana-gold/15 bg-white px-3 text-sm outline-none focus:border-arcana-gold"
+                  autoComplete="name"
+                  required
+                />
+              </label>
+              <label className="block">
+                <span className="mb-1 block text-sm font-semibold text-arcana-gray">Email</span>
+                <input
+                  value={customer.email}
+                  onChange={(event) => updateCustomer("email", event.target.value)}
+                  className="h-12 w-full rounded-xl border border-arcana-gold/15 bg-white px-3 text-sm outline-none focus:border-arcana-gold"
+                  autoComplete="email"
+                  inputMode="email"
+                  required
+                />
+              </label>
+              <label className="block">
+                <span className="mb-1 block text-sm font-semibold text-arcana-gray">地址</span>
+                <input
+                  value={customer.address}
+                  onChange={(event) => updateCustomer("address", event.target.value)}
+                  className="h-12 w-full rounded-xl border border-arcana-gold/15 bg-white px-3 text-sm outline-none focus:border-arcana-gold"
+                  autoComplete="shipping street-address"
+                  required
+                />
+              </label>
               <label className="block">
                 <span className="mb-1 block text-sm font-semibold text-arcana-gray">备注</span>
-                <textarea className="min-h-28 w-full rounded-xl border border-arcana-gold/15 bg-white px-3 py-2 text-sm outline-none focus:border-arcana-gold" />
+                <textarea
+                  value={customer.note}
+                  onChange={(event) => updateCustomer("note", event.target.value)}
+                  className="min-h-28 w-full rounded-xl border border-arcana-gold/15 bg-white px-3 py-2 text-sm outline-none focus:border-arcana-gold"
+                />
               </label>
-              <button type="button" onClick={submitOrder} disabled={!design} className="inline-flex h-12 w-full items-center justify-center rounded-full bg-arcana-gold px-6 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-50">
-                提交订单
+              <button
+                type="button"
+                onClick={submitOrder}
+                disabled={!design || isSubmitting || !customer.name.trim() || !customer.email.trim() || !customer.address.trim()}
+                className="inline-flex h-12 w-full items-center justify-center rounded-full bg-arcana-gold px-6 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                {isSubmitting ? "正在创建付款链接..." : "前往 Waffo Pancake 付款"}
               </button>
             </form>
             <p className="mt-4 text-sm leading-relaxed text-arcana-gray">{status}</p>
