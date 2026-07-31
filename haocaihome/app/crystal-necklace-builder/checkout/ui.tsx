@@ -42,6 +42,8 @@ export default function BraceletCheckout() {
 
   const submitOrder = async () => {
     if (!design) return;
+    const checkoutWindow = window.open("", "_blank", "noopener,noreferrer");
+
     setIsSubmitting(true);
     setStatus("正在创建 Waffo Pancake 付款链接...");
 
@@ -71,9 +73,15 @@ export default function BraceletCheckout() {
         throw new Error(payload.error || "创建付款链接失败");
       }
 
-      setStatus("付款链接已创建，正在跳转...");
-      window.location.href = payload.checkoutUrl;
+      setStatus("付款链接已创建，请在新开启的页面完成付款。");
+
+      if (checkoutWindow) {
+        checkoutWindow.location.href = payload.checkoutUrl;
+      } else {
+        window.open(payload.checkoutUrl, "_blank", "noopener,noreferrer");
+      }
     } catch (error) {
+      checkoutWindow?.close();
       setIsSubmitting(false);
       setStatus(error instanceof Error ? error.message : "创建付款链接失败，请稍后再试。");
     }
@@ -180,7 +188,7 @@ export default function BraceletCheckout() {
                 disabled={!design || isSubmitting || !customer.name.trim() || !customer.email.trim() || !customer.address.trim()}
                 className="inline-flex h-12 w-full items-center justify-center rounded-full bg-arcana-gold px-6 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-50"
               >
-                {isSubmitting ? "正在创建付款链接..." : "前往 Waffo Pancake 付款"}
+                {isSubmitting ? "正在创建付款链接..." : "开启 Waffo Pancake 付款"}
               </button>
             </form>
             <p className="mt-4 text-sm leading-relaxed text-arcana-gray">{status}</p>

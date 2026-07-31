@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { createWaffoCheckoutSession } from "@/lib/waffo";
+import { createWaffoCheckout, getWaffoCheckoutLanguage, getWaffoTaxCategory } from "@/lib/waffo";
 
 export const runtime = "nodejs";
 
@@ -28,9 +28,8 @@ function cleanString(value: unknown) {
 
 export async function POST(request: Request) {
   try {
-    const productId = process.env.WAFFO_PRODUCT_ID;
+    const productId = process.env.WAFFO_PRODUCT_ID || "PROD_006QkE8wnOF6BU2H55ByNG";
     const currency = process.env.WAFFO_CURRENCY || "USD";
-    const productType = process.env.WAFFO_PRODUCT_TYPE === "subscription" ? "subscription" : "onetime";
 
     if (!productId) {
       return NextResponse.json({ error: "Missing WAFFO_PRODUCT_ID" }, { status: 500 });
@@ -55,13 +54,13 @@ export async function POST(request: Request) {
     const successUrl = `${siteUrl}/crystal-necklace-builder/checkout/success?order=${encodeURIComponent(orderId)}`;
     const usePriceSnapshot = process.env.WAFFO_USE_PRICE_SNAPSHOT === "true";
 
-    const session = await createWaffoCheckoutSession({
+    const session = await createWaffoCheckout({
       productId,
-      productType,
       currency,
+      buyerIdentity: email,
       buyerEmail: email,
       successUrl,
-      language: process.env.WAFFO_CHECKOUT_LANGUAGE || "zh-Hans",
+      language: getWaffoCheckoutLanguage(),
       darkMode: false,
       orderMerchantExternalId: orderId,
       metadata: {
@@ -73,14 +72,13 @@ export async function POST(request: Request) {
         theme: cleanString(body.design.theme),
         intention: cleanString(body.design.intention),
         size: cleanString(body.design.size),
-        beadCount: body.design.beadCount || 0,
+        beadCount: String(body.design.beadCount || 0),
         pattern: body.design.pattern?.join(" / ") || "",
       },
       priceSnapshot: usePriceSnapshot
         ? {
             amount: Number(body.design.price || 0).toFixed(2),
-            taxIncluded: process.env.WAFFO_TAX_INCLUDED !== "false",
-            taxCategory: process.env.WAFFO_TAX_CATEGORY || "professional_service",
+            taxCategory: getWaffoTaxCategory(),
           }
         : undefined,
     });
