@@ -28,7 +28,7 @@ function cleanString(value: unknown) {
 
 export async function POST(request: Request) {
   try {
-    const productId = process.env.WAFFO_PRODUCT_ID || "PROD_006QkE8wnOF6BU2H55ByNG";
+    const productId = process.env.WAFFO_PRODUCT_ID;
     const currency = process.env.WAFFO_CURRENCY || "USD";
 
     if (!productId) {
