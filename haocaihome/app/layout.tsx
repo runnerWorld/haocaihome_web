@@ -1,6 +1,10 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import { getAbsoluteUrl, getSiteUrl } from "@/lib/seo";
 import "./globals.css";
+
+const googleAnalyticsId =
+  process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID || "G-ZXW9HYFBEP";
 
 export const metadata: Metadata = {
   metadataBase: new URL(getSiteUrl()),
@@ -31,6 +35,24 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="zh-CN">
+      <head>
+        {googleAnalyticsId ? (
+          <>
+            <Script
+              src={`https://www.googletagmanager.com/gtag/js?id=${googleAnalyticsId}`}
+              strategy="afterInteractive"
+            />
+            <Script id="google-analytics" strategy="afterInteractive">
+              {`
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){dataLayer.push(arguments);}
+                gtag('js', new Date());
+                gtag('config', '${googleAnalyticsId}');
+              `}
+            </Script>
+          </>
+        ) : null}
+      </head>
       <body
         className="antialiased"
         style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif' }}
