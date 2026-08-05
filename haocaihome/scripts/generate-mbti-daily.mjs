@@ -205,6 +205,73 @@ JSON 字段必须完全如下：
 `.trim();
 }
 
+function buildEnglishPrompt(payload, content) {
+  const persona = payload.persona;
+
+  return `
+Translate and adapt the following MBTI daily horoscope content into publish-ready English SEO copy.
+
+Date: ${payload.date}
+MBTI: ${persona.mbti}
+Personality name: ${persona.name}
+Tone: calm, specific, grounded, never fear-based.
+
+Use the same daily theme and practical advice as the Chinese version, but write naturally for English readers.
+
+Chinese source JSON:
+${JSON.stringify(content)}
+
+Return valid JSON only. No markdown.
+
+JSON fields must be exactly:
+{
+  "seo_title": "",
+  "meta_description": "",
+  "h1": "",
+  "daily_theme": "",
+  "daily_theme_en": "",
+  "hook": "",
+  "quick_summary": {
+    "keywords": [],
+    "suitable": "",
+    "avoid": "",
+    "action": ""
+  },
+  "stuck_moment": "",
+  "one_sentence_advice": "",
+  "intro": "",
+  "overall": "",
+  "work": "",
+  "study": "",
+  "love": "",
+  "relationship": "",
+  "card_prompt": {
+    "title": "",
+    "body": "",
+    "cards": [
+      {"name": "", "meaning": ""}
+    ]
+  },
+  "app_cta": "",
+  "lucky_color": "",
+  "lucky_number": "",
+  "today_advice": "",
+  "topic_keywords": [],
+  "seo_keywords": [],
+  "faq": [
+    {"question": "", "answer": ""}
+  ]
+}
+
+Requirements:
+1. Keep it as a website SEO page, not a chat reply.
+2. Naturally include ${persona.mbti}, daily horoscope, work, study, love, relationships, and today's theme.
+3. Do not claim certainty, do not create fear, and do not provide medical, legal, or financial guarantees.
+4. FAQ must contain at least 5 search-style questions.
+5. Each analysis section must include a realistic situation and one practical action.
+`.trim();
+}
+
 async function generateOne(apiKey, payload) {
   const response = await fetch(DEEPSEEK_API_URL, {
     method: "POST",
@@ -228,6 +295,41 @@ async function generateOne(apiKey, payload) {
       ],
       stream: false,
       temperature: 0.82,
+    }),
+  });
+
+  const result = await response.json();
+
+  if (!response.ok) {
+    throw new Error(result.error?.message ?? `DeepSeek API failed with ${response.status}`);
+  }
+
+  return JSON.parse(stripJsonFence(result.choices?.[0]?.message?.content ?? ""));
+}
+
+async function generateEnglish(apiKey, payload, content) {
+  const response = await fetch(DEEPSEEK_API_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${apiKey}`,
+    },
+    body: JSON.stringify({
+      model: process.env.DEEPSEEK_MODEL ?? "deepseek-v4-flash",
+      response_format: { type: "json_object" },
+      messages: [
+        {
+          role: "system",
+          content:
+            "You are an SEO content strategist and MBTI daily horoscope writer. You must return valid JSON only, with grounded and publishable English copy.",
+        },
+        {
+          role: "user",
+          content: buildEnglishPrompt(payload, content),
+        },
+      ],
+      stream: false,
+      temperature: 0.76,
     }),
   });
 
@@ -280,9 +382,11 @@ async function main() {
 
     const existingSlugs = await getExistingCanonicalSlugs(code, date);
     const content = buildContentSlugs(code, await generateOne(apiKey, payload), existingSlugs);
+    const contentEn = await generateEnglish(apiKey, payload, content);
     const record = {
       ...payload,
       content,
+      content_en: contentEn,
       generated_at: new Date().toISOString(),
     };
     const outputFile = path.join(outputDir, `${code.toLowerCase()}.json`);

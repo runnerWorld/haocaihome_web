@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { getMBTIDailyIndexItems, getMBTIDailyUrl } from "@/lib/mbtiDailyContent";
+import LanguageSwitch from "@/components/LanguageSwitch";
+import { getEnglishMBTIDailyUrl, getMBTIDailyIndexItems, getMBTIDailyUrl } from "@/lib/mbtiDailyContent";
 import { getAbsoluteUrl, jsonLdScript } from "@/lib/seo";
 
 export const metadata = {
@@ -8,6 +9,10 @@ export const metadata = {
   keywords: ["MBTI 今日运势", "16 型人格每日运势", "MBTI 性格分析", "MBTI 工作运", "MBTI 爱情运", "每日人格提醒"],
   alternates: {
     canonical: getAbsoluteUrl("/mbti"),
+    languages: {
+      "zh-CN": getAbsoluteUrl("/mbti"),
+      en: getAbsoluteUrl("/en/mbti"),
+    },
   },
   openGraph: {
     title: "MBTI 今日运势 - 16 型人格每日工作学习爱情分析",
@@ -78,6 +83,9 @@ export default function MBTIIndexPage() {
         <Link href="/" className="mb-8 inline-flex text-sm font-medium text-arcana-gray hover:text-arcana-gold">
           返回首页
         </Link>
+        <div className="mb-8">
+          <LanguageSwitch current="zh" zhHref="/mbti" enHref="/en/mbti" />
+        </div>
 
         <header className="mb-10 max-w-3xl">
           <p className="mb-3 text-sm font-semibold text-arcana-gold">MBTI Daily</p>
@@ -90,6 +98,7 @@ export default function MBTIIndexPage() {
         <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {items.map((item) => {
             const href = item.record ? getMBTIDailyUrl(item.code, item.record) : undefined;
+            const englishHref = item.record ? getEnglishMBTIDailyUrl(item.code, item.record) : undefined;
 
             return (
               <article key={item.code} className="ios-glass rounded-2xl p-5">
@@ -106,9 +115,16 @@ export default function MBTIIndexPage() {
                   {item.record?.content.meta_description ?? item.focus}
                 </p>
                 {href ? (
-                  <Link href={href} className="inline-flex text-sm font-semibold text-arcana-gold hover:text-arcana-cream">
-                    查看今日分析
-                  </Link>
+                  <div className="flex flex-wrap gap-3">
+                    <Link href={href} className="inline-flex text-sm font-semibold text-arcana-gold hover:text-arcana-cream">
+                      查看今日分析
+                    </Link>
+                    {englishHref ? (
+                      <Link href={englishHref} hrefLang="en" className="inline-flex text-sm font-semibold text-arcana-gray hover:text-arcana-gold">
+                        English
+                      </Link>
+                    ) : null}
+                  </div>
                 ) : (
                   <span className="text-sm text-arcana-gray-dark">等待生成内容</span>
                 )}

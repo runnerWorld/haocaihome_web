@@ -101,6 +101,75 @@ function getLegacySlugs(content) {
   return Array.from(new Set([...(content.legacy_slugs ?? []), content.slug, content.slug_en, content.slug_zh].filter(Boolean)));
 }
 
+function getEnglishFallbackContent(type, content, titleEn, dailyThemeEn) {
+  const mbti = titleCaseType(type);
+  const theme = dailyThemeEn
+    .split(/\s+/)
+    .filter(Boolean)
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
+
+  return {
+    seo_title: content.title_en || titleEn,
+    meta_description: `${mbti} daily horoscope for work, study, love, and relationships. Today's theme: ${theme}.`,
+    h1: `${mbti} Daily Horoscope: ${theme}`,
+    daily_theme: theme,
+    daily_theme_en: dailyThemeEn,
+    hook: `${mbti}, today is about ${dailyThemeEn}. Use this reading as a grounded prompt for reflection and action.`,
+    quick_summary: {
+      keywords: ["clarity", "boundaries", "small action"],
+      suitable: `Choose one situation where ${dailyThemeEn} can make your day easier.`,
+      avoid: "Overthinking the whole day before taking the first practical step.",
+      action: "Write down one clear next action and do it within ten minutes.",
+    },
+    stuck_moment: "The easiest place to get stuck today is knowing what matters but waiting for the perfect moment to begin.",
+    one_sentence_advice: `Let ${dailyThemeEn} guide one concrete choice today.`,
+    intro: `${mbti} daily horoscope pages are for self-reflection and practical planning. They do not predict a fixed outcome, but they can help you notice today's emotional rhythm and choose a better next step.`,
+    overall: `Overall, ${mbti} benefits from slowing down enough to choose one clear priority. Keep the theme of ${dailyThemeEn} close and let it shape your decisions.`,
+    work: "At work, focus on one priority before opening too many new threads. A short written note can make your expectations and next step clearer.",
+    study: "For study, choose depth over quantity. Spend focused time on one concept, then summarize it in your own words.",
+    love: "In love, avoid guessing what the other person means. A simple sentence such as \"Can I check what you meant by that?\" can reduce unnecessary tension.",
+    relationship: "In relationships, give a warm response without taking responsibility for everything. Clear words can be kinder than silent pressure.",
+    card_prompt: {
+      title: "Today's Mood Card Prompt",
+      body: "Open Haocaihong, draw today's mood card, and ask the AI what one next step fits your current state.",
+      cards: [
+        { name: "The Star", meaning: "Return to hope and a longer view." },
+        { name: "Temperance", meaning: "Lower the intensity and take one balanced step." },
+        { name: "The Hermit", meaning: "Create quiet space for your own judgment." },
+      ],
+    },
+    app_cta: "If you want a more personal reading, open Haocaihong, draw today's mood card, and continue the conversation with AI.",
+    lucky_color: String(content.lucky_color ?? "soft blue"),
+    lucky_number: String(content.lucky_number ?? "7"),
+    today_advice: `Use ${dailyThemeEn} as your anchor and turn it into one visible action.`,
+    topic_keywords: [`${mbti} daily horoscope`, `${mbti} work horoscope`, `${mbti} love horoscope`],
+    seo_keywords: [`${mbti} daily horoscope`, `${mbti} horoscope today`, `${mbti} work love study`],
+    faq: [
+      {
+        question: `What is the ${mbti} daily horoscope about today?`,
+        answer: `It focuses on ${dailyThemeEn} and turns that theme into practical advice for work, study, love, and relationships.`,
+      },
+      {
+        question: `Is this ${mbti} horoscope a prediction?`,
+        answer: "No. It is a reflective guide for noticing patterns and choosing practical actions, not a fixed prediction.",
+      },
+      {
+        question: `What should ${mbti} focus on at work today?`,
+        answer: "Choose one priority, clarify the next step, and avoid carrying responsibilities that are not yours.",
+      },
+      {
+        question: `How can ${mbti} handle love today?`,
+        answer: "Ask clear questions instead of guessing. Simple and honest wording helps reduce overthinking.",
+      },
+      {
+        question: `How should ${mbti} use this daily horoscope?`,
+        answer: "Use it as a short reflection prompt, then turn the theme into one action you can complete today.",
+      },
+    ],
+  };
+}
+
 async function readJson(filePath) {
   return JSON.parse(await readFile(filePath, "utf8"));
 }
@@ -133,6 +202,8 @@ async function migrateRecord(filePath, type, date, existingSlugs) {
     slug_zh: slugZh,
     slug_en: slugEn,
   };
+
+  record.content_en = record.content_en || getEnglishFallbackContent(type, record.content, titleEn, dailyThemeEn);
 
   await writeJson(filePath, record);
 
