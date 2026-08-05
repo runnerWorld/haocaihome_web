@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { getMBTIDailyIndexItems } from "@/lib/mbtiDailyContent";
+import { getMBTIDailyIndexItems, getMBTIDailyUrl } from "@/lib/mbtiDailyContent";
 import { getAbsoluteUrl, jsonLdScript } from "@/lib/seo";
 
 export const metadata = {
@@ -36,7 +36,7 @@ export default function MBTIIndexPage() {
       "@type": "ListItem",
       position: index + 1,
       name: `${item.code} ${item.name}`,
-      url: item.latestDate ? getAbsoluteUrl(`/mbti/${item.code.toLowerCase()}/daily/${item.latestDate}`) : getAbsoluteUrl("/mbti"),
+      url: item.record ? getAbsoluteUrl(getMBTIDailyUrl(item.code, item.record)) : getAbsoluteUrl("/mbti"),
     })),
   };
   const faqJsonLd = {
@@ -89,7 +89,7 @@ export default function MBTIIndexPage() {
 
         <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {items.map((item) => {
-            const href = item.latestDate ? `/mbti/${item.code.toLowerCase()}/daily/${item.latestDate}` : undefined;
+            const href = item.record ? getMBTIDailyUrl(item.code, item.record) : undefined;
 
             return (
               <article key={item.code} className="ios-glass rounded-2xl p-5">

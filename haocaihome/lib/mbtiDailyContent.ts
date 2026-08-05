@@ -13,7 +13,15 @@ export type MBTIDailyRecord = {
 
 const DATA_DIR = path.join(process.cwd(), "data", "mbti-daily");
 
-export function getMBTIDailyRecord(type: string, date: string) {
+function normalizeSegment(segment: string) {
+  try {
+    return decodeURIComponent(segment);
+  } catch {
+    return segment;
+  }
+}
+
+function readMBTIDailyRecord(type: string, date: string) {
   const mbtiType = getMBTIType(type);
   if (!mbtiType) return null;
 
@@ -21,6 +29,45 @@ export function getMBTIDailyRecord(type: string, date: string) {
   if (!existsSync(filePath)) return null;
 
   return JSON.parse(readFileSync(filePath, "utf8")) as MBTIDailyRecord;
+}
+
+export function getMBTIDailyRecord(type: string, dateOrSlug: string) {
+  const segment = normalizeSegment(dateOrSlug);
+
+  if (/^\d{4}-\d{2}-\d{2}$/.test(segment)) {
+    return readMBTIDailyRecord(type, segment);
+  }
+
+  const mbtiType = getMBTIType(type);
+  if (!mbtiType) return null;
+
+  for (const date of getMBTIDailyDates()) {
+    const record = readMBTIDailyRecord(mbtiType.code, date);
+
+    if (record && getMBTIDailyAliases(record).includes(segment)) {
+      return record;
+    }
+  }
+
+  return null;
+}
+
+export function getMBTIDailyRecordByDate(type: string, date: string) {
+  return readMBTIDailyRecord(type, date);
+}
+
+export function getMBTIDailyCanonicalSlug(record: MBTIDailyRecord) {
+  return record.content.slug_en || record.content.slug || record.date;
+}
+
+export function getMBTIDailyAliases(record: MBTIDailyRecord) {
+  return Array.from(new Set([record.date, record.content.slug_en, record.content.slug_zh, record.content.slug].filter(Boolean)));
+}
+
+export function getMBTIDailyUrl(type: string, record: MBTIDailyRecord) {
+  const segment = getMBTIDailyCanonicalSlug(record);
+
+  return `/mbti/${type.toLowerCase()}/daily/${segment}`;
 }
 
 export function getLatestMBTIDailyDate() {
@@ -59,6 +106,13 @@ export function getMBTIDailyAdjacentDates(type: string, date: string) {
 }
 
 export function getAvailableMBTIDailyParams() {
+  return getAvailableMBTIDailyPages().map(({ type, segment }) => ({
+    date: segment,
+    type,
+  }));
+}
+
+export function getAvailableMBTIDailyPages() {
   if (!existsSync(DATA_DIR)) return [];
 
   return readdirSync(DATA_DIR, { withFileTypes: true })
@@ -69,10 +123,16 @@ export function getAvailableMBTIDailyParams() {
 
       return readdirSync(dateDir)
         .filter((file) => file.endsWith(".json") && file !== "index.json")
-        .map((file) => ({
-          date,
-          type: file.replace(/\.json$/, ""),
-        }));
+        .map((file) => {
+          const type = file.replace(/\.json$/, "");
+          const record = readMBTIDailyRecord(type, date);
+
+          return {
+            date,
+            segment: record ? getMBTIDailyCanonicalSlug(record) : date,
+            type,
+          };
+        });
     });
 }
 
@@ -82,6 +142,6 @@ export function getMBTIDailyIndexItems() {
   return MBTI_TYPES.map((type) => ({
     ...type,
     latestDate,
-    record: latestDate ? getMBTIDailyRecord(type.code, latestDate) : null,
+    record: latestDate ? getMBTIDailyRecordByDate(type.code, latestDate) : null,
   }));
 }
