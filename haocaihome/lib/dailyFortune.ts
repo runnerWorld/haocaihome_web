@@ -22,8 +22,10 @@ export type DailyFortuneContent = {
   title_en?: string;
   slug_zh?: string;
   slug_en?: string;
+  legacy_slugs?: string[];
   h1: string;
   daily_theme?: string;
+  daily_theme_en?: string;
   hook?: string;
   quick_summary?: {
     keywords: string[];
@@ -109,6 +111,7 @@ JSON 字段必须完全如下：
   "slug_en": "",
   "h1": "",
   "daily_theme": "",
+  "daily_theme_en": "",
   "hook": "",
   "quick_summary": {
     "keywords": [],
@@ -155,7 +158,7 @@ JSON 字段必须完全如下：
 10. card_prompt 连接好彩虹 App 的心情卡体验，给 3 张可能抽到的塔罗牌及其含义。
 11. app_cta 不能硬广，要自然引导用户打开好彩虹，抽今日心情卡并继续问 AI 下一步。
 12. FAQ 至少 5 条，问题要像搜索问题，例如“${persona.mbti ?? "MBTI"} 今天适合主动联系别人吗？”。
-13. title_zh 写中文 SEO 标题，title_en 写自然英文标题；slug_en 根据 title_en 生成小写英文、数字和连字符，slug_zh 根据 title_zh 生成中文关键词和连字符，不要包含空格；slug 保持与 slug_en 相同。每日内容的 slug_en 要包含人格类型和自然日期词，避免不同日期重复。
+13. title_zh 写中文 SEO 标题，title_en 写自然英文标题。daily_theme_en 必须把 daily_theme 翻译成自然英文动作主题，使用 3 到 6 个英文词，例如 set clear boundaries、reply without overthinking、finish one small task。slug、slug_en、slug_zh 可以留空，最终 URL 会由脚本根据主题统一生成。
 14. 避免同一 MBTI 每天重复同一套说法；不要只反复讲人格标签，要写“今天有什么不同”。
 `.trim();
 }
