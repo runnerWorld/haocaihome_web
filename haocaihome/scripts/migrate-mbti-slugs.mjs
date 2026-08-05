@@ -3,6 +3,7 @@ import path from "node:path";
 import process from "node:process";
 
 const DATA_DIR = path.join(process.cwd(), "data", "mbti-daily");
+const DEEPSEEK_API_URL = "https://api.deepseek.com/chat/completions";
 const MONTH_NAMES = [
   "january",
   "february",
@@ -22,6 +23,23 @@ function readArg(name, fallback) {
   const prefix = `--${name}=`;
   const value = process.argv.find((arg) => arg.startsWith(prefix));
   return value ? value.slice(prefix.length) : fallback;
+}
+
+function hasFlag(name) {
+  return process.argv.includes(`--${name}`);
+}
+
+function getDeepSeekAPIKey() {
+  return process.env.DEEPSEEK_API_KEY ?? "";
+}
+
+function stripJsonFence(content) {
+  const withoutFence = content.trim().replace(/^```(?:json)?/i, "").replace(/```$/i, "").trim();
+  const start = withoutFence.indexOf("{");
+  const end = withoutFence.lastIndexOf("}");
+  const jsonLike = start >= 0 && end > start ? withoutFence.slice(start, end + 1) : withoutFence;
+
+  return jsonLike.replace(/[\u0000-\u001F]/g, "");
 }
 
 function isDateDir(name) {
@@ -170,6 +188,108 @@ function getEnglishFallbackContent(type, content, titleEn, dailyThemeEn) {
   };
 }
 
+function buildEnglishPrompt(type, date, content) {
+  const mbti = titleCaseType(type);
+
+  return `
+Translate and adapt this existing Chinese MBTI daily horoscope into publish-ready English SEO content.
+
+Date: ${date}
+MBTI: ${mbti}
+Canonical slug: ${content.slug_en || content.slug}
+Daily theme in Chinese: ${content.daily_theme}
+Daily theme in English: ${content.daily_theme_en}
+
+Chinese source JSON:
+${JSON.stringify(content)}
+
+Return valid JSON only. No markdown.
+
+JSON fields must be exactly:
+{
+  "seo_title": "",
+  "meta_description": "",
+  "h1": "",
+  "daily_theme": "",
+  "daily_theme_en": "",
+  "hook": "",
+  "quick_summary": {
+    "keywords": [],
+    "suitable": "",
+    "avoid": "",
+    "action": ""
+  },
+  "stuck_moment": "",
+  "one_sentence_advice": "",
+  "intro": "",
+  "overall": "",
+  "work": "",
+  "study": "",
+  "love": "",
+  "relationship": "",
+  "card_prompt": {
+    "title": "",
+    "body": "",
+    "cards": [
+      {"name": "", "meaning": ""}
+    ]
+  },
+  "app_cta": "",
+  "lucky_color": "",
+  "lucky_number": "",
+  "today_advice": "",
+  "topic_keywords": [],
+  "seo_keywords": [],
+  "faq": [
+    {"question": "", "answer": ""}
+  ]
+}
+
+Requirements:
+1. Write natural English for English-speaking readers; do not translate word-for-word when it sounds unnatural.
+2. Keep the same meaning, daily theme, tarot card prompt, and practical advice as the Chinese content.
+3. Naturally include ${mbti}, daily horoscope, work, study, love, relationships, and the daily theme.
+4. Do not claim certainty, do not create fear, and do not provide medical, legal, or financial guarantees.
+5. FAQ must contain at least 5 search-style questions.
+6. Every analysis section must include a realistic situation and one practical action.
+`.trim();
+}
+
+async function translateEnglishContent(apiKey, type, date, content) {
+  const response = await fetch(DEEPSEEK_API_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${apiKey}`,
+    },
+    body: JSON.stringify({
+      model: process.env.DEEPSEEK_MODEL ?? "deepseek-v4-flash",
+      response_format: { type: "json_object" },
+      messages: [
+        {
+          role: "system",
+          content:
+            "You are an SEO content strategist and MBTI daily horoscope writer. You must return valid JSON only, with grounded and publishable English copy.",
+        },
+        {
+          role: "user",
+          content: buildEnglishPrompt(type, date, content),
+        },
+      ],
+      stream: false,
+      temperature: 0.74,
+    }),
+  });
+
+  const result = await response.json();
+
+  if (!response.ok) {
+    throw new Error(result.error?.message ?? `DeepSeek API failed with ${response.status}`);
+  }
+
+  return JSON.parse(stripJsonFence(result.choices?.[0]?.message?.content ?? ""));
+}
+
 async function readJson(filePath) {
   return JSON.parse(await readFile(filePath, "utf8"));
 }
@@ -178,7 +298,7 @@ async function writeJson(filePath, value) {
   await writeFile(filePath, `${JSON.stringify(value, null, 2)}\n`, "utf8");
 }
 
-async function migrateRecord(filePath, type, date, existingSlugs) {
+async function migrateRecord(filePath, type, date, existingSlugs, options) {
   const record = await readJson(filePath);
   const content = record.content ?? {};
   const [fallbackThemeEn, fallbackThemeZh] = getThemeFallback(type);
@@ -203,7 +323,11 @@ async function migrateRecord(filePath, type, date, existingSlugs) {
     slug_en: slugEn,
   };
 
-  record.content_en = record.content_en || getEnglishFallbackContent(type, record.content, titleEn, dailyThemeEn);
+  if (options.translateEn && (!record.content_en || options.forceEn)) {
+    record.content_en = await translateEnglishContent(options.apiKey, type, date, record.content);
+  } else {
+    record.content_en = record.content_en || getEnglishFallbackContent(type, record.content, titleEn, dailyThemeEn);
+  }
 
   await writeJson(filePath, record);
 
@@ -223,6 +347,14 @@ async function migrateRecord(filePath, type, date, existingSlugs) {
 
 async function main() {
   const fromDate = readArg("from", "2026-07-23");
+  const translateEn = hasFlag("translate-en");
+  const forceEn = hasFlag("force-en");
+  const apiKey = getDeepSeekAPIKey();
+
+  if (translateEn && !apiKey) {
+    throw new Error("Missing DEEPSEEK_API_KEY. Set it before running --translate-en.");
+  }
+
   const existingSlugsByType = new Map();
   const dateDirs = (await readdir(DATA_DIR, { withFileTypes: true }))
     .filter((entry) => entry.isDirectory() && isDateDir(entry.name) && entry.name >= fromDate)
@@ -230,6 +362,7 @@ async function main() {
     .sort();
 
   let migrated = 0;
+  let translated = 0;
 
   for (const date of dateDirs) {
     const dateDir = path.join(DATA_DIR, date);
@@ -248,9 +381,17 @@ async function main() {
       const type = file.replace(/\.json$/, "");
       const existingSlugs = existingSlugsByType.get(type) ?? new Set();
       existingSlugsByType.set(type, existingSlugs);
-      const item = await migrateRecord(path.join(dateDir, file), type, date, existingSlugs);
+      const filePath = path.join(dateDir, file);
+      const before = await readJson(filePath);
+      const hadEnglish = Boolean(before.content_en);
+      const item = await migrateRecord(filePath, type, date, existingSlugs, {
+        apiKey,
+        forceEn,
+        translateEn,
+      });
       indexItems.push(item);
       migrated += 1;
+      if (translateEn && (!hadEnglish || forceEn)) translated += 1;
     }
 
     await writeJson(indexPath, {
@@ -261,6 +402,9 @@ async function main() {
   }
 
   console.log(`Migrated ${migrated} MBTI daily records from ${fromDate}.`);
+  if (translateEn) {
+    console.log(`Translated ${translated} MBTI daily records into English.`);
+  }
 }
 
 main().catch((error) => {
