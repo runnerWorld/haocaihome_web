@@ -61,7 +61,7 @@ export function getMBTIDailyCanonicalSlug(record: MBTIDailyRecord) {
 }
 
 export function getMBTIDailyAliases(record: MBTIDailyRecord) {
-  return Array.from(new Set([record.date, record.content.slug_en, record.content.slug_zh, record.content.slug].filter(Boolean)));
+  return Array.from(new Set([record.date, record.content.slug_en, record.content.slug_zh, record.content.slug, ...(record.content.legacy_slugs ?? [])].filter(Boolean)));
 }
 
 export function getMBTIDailyUrl(type: string, record: MBTIDailyRecord) {

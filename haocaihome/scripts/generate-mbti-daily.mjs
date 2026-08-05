@@ -1,4 +1,4 @@
-import { mkdir, writeFile } from "node:fs/promises";
+import { mkdir, readdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import process from "node:process";
 
@@ -24,6 +24,7 @@ const MBTI_TYPES = [
 ];
 
 const today = new Date().toISOString().slice(0, 10);
+const DATA_DIR = path.join(process.cwd(), "data", "mbti-daily");
 
 function readArg(name, fallback) {
   const prefix = `--${name}=`;
@@ -42,6 +43,85 @@ function stripJsonFence(content) {
   const jsonLike = start >= 0 && end > start ? withoutFence.slice(start, end + 1) : withoutFence;
 
   return jsonLike.replace(/[\u0000-\u001F]/g, "");
+}
+
+function slugifyEnglish(value) {
+  return value
+    .toString()
+    .normalize("NFKD")
+    .toLowerCase()
+    .replace(/['’]/g, "")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/-+/g, "-")
+    .replace(/^-|-$/g, "");
+}
+
+function slugifyChinese(value) {
+  return value
+    .toString()
+    .toLowerCase()
+    .replace(/[|｜:：,，.。!！?？()[\]【】「」『』"'“”‘’]/g, " ")
+    .replace(/\s+/g, "-")
+    .replace(/-+/g, "-")
+    .replace(/^-|-$/g, "");
+}
+
+async function readJsonIfExists(filePath) {
+  try {
+    return JSON.parse(await readFile(filePath, "utf8"));
+  } catch {
+    return null;
+  }
+}
+
+async function getExistingCanonicalSlugs(type, currentDate) {
+  const slugs = new Set();
+
+  try {
+    const entries = await readdir(DATA_DIR, { withFileTypes: true });
+
+    for (const entry of entries) {
+      if (!entry.isDirectory() || entry.name === currentDate || !/^\d{4}-\d{2}-\d{2}$/.test(entry.name)) continue;
+
+      const record = await readJsonIfExists(path.join(DATA_DIR, entry.name, `${type.toLowerCase()}.json`));
+      const content = record?.content ?? {};
+
+      for (const slug of [content.slug_en, content.slug]) {
+        if (slug) slugs.add(slug);
+      }
+    }
+  } catch {
+    return slugs;
+  }
+
+  return slugs;
+}
+
+function getUniqueSlug(baseSlug, existingSlugs) {
+  let slug = baseSlug;
+  let suffix = 2;
+
+  while (existingSlugs.has(slug)) {
+    slug = `${baseSlug}-${suffix}`;
+    suffix += 1;
+  }
+
+  existingSlugs.add(slug);
+  return slug;
+}
+
+function buildContentSlugs(type, content, existingSlugs) {
+  const themeEn = slugifyEnglish(content.daily_theme_en || content.daily_theme || content.title_en || content.seo_title);
+  const themeZh = slugifyChinese(content.daily_theme || content.title_zh || content.h1 || content.seo_title);
+  const slugEn = getUniqueSlug(`${type.toLowerCase()}-daily-horoscope-${themeEn || "today-theme"}`, existingSlugs);
+  const slugZh = `${type.toLowerCase()}-今日运势-${themeZh || "今日主题"}`;
+
+  return {
+    ...content,
+    slug: slugEn,
+    slug_en: slugEn,
+    slug_zh: slugZh,
+  };
 }
 
 function buildPrompt(payload) {
@@ -72,6 +152,7 @@ JSON 字段必须完全如下：
   "slug_en": "",
   "h1": "",
   "daily_theme": "",
+  "daily_theme_en": "",
   "hook": "",
   "quick_summary": {
     "keywords": [],
@@ -118,7 +199,7 @@ JSON 字段必须完全如下：
 10. 不要声称百分百准确，不要制造恐惧。
 11. 不要给医疗、法律、投资保证。
 12. FAQ 至少 5 条，问题要像搜索问题，例如“${persona.mbti} 今天适合主动联系别人吗？”。
-13. title_zh 写中文 SEO 标题，title_en 写自然英文标题；slug_en 根据 title_en 生成小写英文、数字和连字符，slug_zh 根据 title_zh 生成中文关键词和连字符，不要包含空格；slug 保持与 slug_en 相同。每日内容的 slug_en 要包含人格类型和自然日期词，避免不同日期重复。
+13. title_zh 写中文 SEO 标题，title_en 写自然英文标题。daily_theme_en 必须把 daily_theme 翻译成自然英文动作主题，使用 3 到 6 个英文词，例如 set clear boundaries、reply without overthinking、finish one small task。slug、slug_en、slug_zh 可以留空，最终 URL 会由脚本根据主题统一生成。
 14. 避免 16 型人格内容模板化，每个类型要体现自身特点，也要体现今天有什么不同。
 15. 不要强行加入城市或地区词。
 `.trim();
@@ -197,7 +278,8 @@ async function main() {
       },
     };
 
-    const content = await generateOne(apiKey, payload);
+    const existingSlugs = await getExistingCanonicalSlugs(code, date);
+    const content = buildContentSlugs(code, await generateOne(apiKey, payload), existingSlugs);
     const record = {
       ...payload,
       content,
@@ -212,6 +294,8 @@ async function main() {
       title: content.seo_title,
       title_zh: content.title_zh,
       title_en: content.title_en,
+      daily_theme: content.daily_theme,
+      daily_theme_en: content.daily_theme_en,
       slug: content.slug,
       slug_zh: content.slug_zh,
       slug_en: content.slug_en,
