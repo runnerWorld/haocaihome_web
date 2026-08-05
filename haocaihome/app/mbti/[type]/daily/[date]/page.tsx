@@ -21,6 +21,8 @@ type PageProps = {
 
 const appStoreUrl = "https://apps.apple.com/app/id6759077138";
 
+export const dynamicParams = true;
+
 function getQuickSummary(content: DailyFortuneContent, mbtiType: MBTIType) {
   return {
     keywords: content.quick_summary?.keywords?.length ? content.quick_summary.keywords.slice(0, 3) : ["清晰", "边界", "小行动"],
