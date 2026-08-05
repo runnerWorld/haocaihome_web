@@ -36,10 +36,10 @@ MBTI：${persona.mbti ?? "未指定"}
 分析重点：${persona.questionFocus ?? "工作、学习、爱情、人际相处中的状态分析"}
 
 请只输出合法 JSON，不要 markdown，不要代码块。字段必须包含：
-seo_title, meta_description, slug, h1, intro, overall, work, study, love,
+seo_title, meta_description, slug, title_zh, title_en, slug_zh, slug_en, h1, intro, overall, work, study, love,
 relationship, lucky_color, lucky_number, today_advice, topic_keywords, seo_keywords, faq。
 
-要求 FAQ 至少 3 条，slug 使用小写英文、数字和连字符，每个分析段落给出可执行建议。不要强行加入城市或地区词。
+要求 FAQ 至少 3 条，title_zh 写中文 SEO 标题，title_en 写自然英文标题；slug_en 根据 title_en 生成小写英文、数字和连字符，slug_zh 根据 title_zh 生成中文关键词和连字符，不要包含空格；slug 保持与 slug_en 相同。每日内容的 slug_en 要包含类型和自然日期词，避免不同日期重复。每个分析段落给出可执行建议。不要强行加入城市或地区词。
 `.trim();
 }
 

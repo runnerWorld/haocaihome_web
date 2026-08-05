@@ -1,6 +1,13 @@
 import Link from "next/link";
-import { notFound } from "next/navigation";
-import { getAvailableMBTIDailyParams, getMBTIDailyAdjacentDates, getMBTIDailyRecord } from "@/lib/mbtiDailyContent";
+import { notFound, permanentRedirect } from "next/navigation";
+import {
+  getAvailableMBTIDailyParams,
+  getMBTIDailyAdjacentDates,
+  getMBTIDailyCanonicalSlug,
+  getMBTIDailyRecord,
+  getMBTIDailyRecordByDate,
+  getMBTIDailyUrl,
+} from "@/lib/mbtiDailyContent";
 import { MBTI_TYPES, getMBTIType, type MBTIType } from "@/lib/mbtiTypes";
 import type { DailyFortuneContent } from "@/lib/dailyFortune";
 import { getAbsoluteUrl, jsonLdScript } from "@/lib/seo";
@@ -56,17 +63,19 @@ export async function generateMetadata({ params }: PageProps) {
     };
   }
 
+  const canonicalPath = getMBTIDailyUrl(type, record);
+
   return {
     title: record.content.seo_title,
     description: record.content.meta_description,
     keywords: [...record.content.seo_keywords, mbtiType?.code, `${mbtiType?.code} 今日运势`, "MBTI 性格关联", "MBTI 每日分析"].filter(Boolean),
     alternates: {
-      canonical: getAbsoluteUrl(`/mbti/${type.toLowerCase()}/daily/${date}`),
+      canonical: getAbsoluteUrl(canonicalPath),
     },
     openGraph: {
       title: record.content.seo_title,
       description: record.content.meta_description,
-      url: getAbsoluteUrl(`/mbti/${type.toLowerCase()}/daily/${date}`),
+      url: getAbsoluteUrl(canonicalPath),
       siteName: "好彩虹",
       locale: record.locale === "zh-TW" ? "zh_TW" : "zh_CN",
       type: "article",
@@ -90,10 +99,17 @@ export default async function MBTIDailyPage({ params }: PageProps) {
     notFound();
   }
 
+  const canonicalPath = getMBTIDailyUrl(mbtiType.code, record);
+  const canonicalSlug = getMBTIDailyCanonicalSlug(record);
+
+  if (date !== canonicalSlug) {
+    permanentRedirect(canonicalPath);
+  }
+
   const quickSummary = getQuickSummary(record.content, mbtiType);
   const cardPrompt = getCardPrompt(record.content);
-  const relatedTypes = getRelatedTypes(mbtiType, date);
-  const { previousDate, nextDate } = getMBTIDailyAdjacentDates(mbtiType.code, date);
+  const relatedTypes = getRelatedTypes(mbtiType, record.date);
+  const { previousDate, nextDate } = getMBTIDailyAdjacentDates(mbtiType.code, record.date);
   const appCta =
     record.content.app_cta ??
     `想把今天的提醒变成你的专属解读？打开好彩虹，先抽一张今日心情卡，再继续问 AI：${mbtiType.code} 今天下一步该怎么做？`;
@@ -104,7 +120,7 @@ export default async function MBTIDailyPage({ params }: PageProps) {
     ["爱情运", record.content.love],
     ["人际相处", record.content.relationship],
   ];
-  const pageUrl = getAbsoluteUrl(`/mbti/${mbtiType.code.toLowerCase()}/daily/${date}`);
+  const pageUrl = getAbsoluteUrl(canonicalPath);
   const articleJsonLd = {
     "@context": "https://schema.org",
     "@type": "Article",
@@ -156,7 +172,7 @@ export default async function MBTIDailyPage({ params }: PageProps) {
         <header className="mb-8">
           <div className="mb-4 flex flex-wrap gap-2">
             <span className="rounded-full bg-white px-3 py-1 text-xs font-semibold text-arcana-gold">{mbtiType.code}</span>
-            <span className="rounded-full bg-white px-3 py-1 text-xs font-semibold text-arcana-gray">{date}</span>
+            <span className="rounded-full bg-white px-3 py-1 text-xs font-semibold text-arcana-gray">{record.date}</span>
           </div>
           <h1 className="mb-5 text-4xl font-bold leading-tight sm:text-5xl">{record.content.h1}</h1>
           <p className="text-lg leading-relaxed text-arcana-gray">{record.content.hook ?? record.content.intro}</p>
@@ -292,17 +308,17 @@ export default async function MBTIDailyPage({ params }: PageProps) {
           <h2 className="mb-4 text-2xl font-bold">继续查看 MBTI 今日运势</h2>
           <div className="flex flex-wrap gap-3">
             {previousDate ? (
-              <Link href={`/mbti/${mbtiType.code.toLowerCase()}/daily/${previousDate}`} className="rounded-full bg-white px-4 py-2 text-sm font-semibold text-arcana-gray hover:text-arcana-gold">
+              <Link href={getMBTIDailyUrl(mbtiType.code, getMBTIDailyRecordByDate(mbtiType.code, previousDate)!)} className="rounded-full bg-white px-4 py-2 text-sm font-semibold text-arcana-gray hover:text-arcana-gold">
                 查看 {previousDate} {mbtiType.code} 运势
               </Link>
             ) : null}
             {nextDate ? (
-              <Link href={`/mbti/${mbtiType.code.toLowerCase()}/daily/${nextDate}`} className="rounded-full bg-white px-4 py-2 text-sm font-semibold text-arcana-gray hover:text-arcana-gold">
+              <Link href={getMBTIDailyUrl(mbtiType.code, getMBTIDailyRecordByDate(mbtiType.code, nextDate)!)} className="rounded-full bg-white px-4 py-2 text-sm font-semibold text-arcana-gray hover:text-arcana-gold">
                 查看 {nextDate} {mbtiType.code} 运势
               </Link>
             ) : null}
             {relatedTypes.map((item) => (
-              <Link key={item.code} href={`/mbti/${item.code.toLowerCase()}/daily/${date}`} className="rounded-full bg-white px-4 py-2 text-sm font-semibold text-arcana-gray hover:text-arcana-gold">
+              <Link key={item.code} href={getMBTIDailyUrl(item.code, getMBTIDailyRecordByDate(item.code, record.date)!)} className="rounded-full bg-white px-4 py-2 text-sm font-semibold text-arcana-gray hover:text-arcana-gold">
                 {item.code} 今日运势
               </Link>
             ))}

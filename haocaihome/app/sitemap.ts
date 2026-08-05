@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next";
-import { getAvailableMBTIDailyParams } from "@/lib/mbtiDailyContent";
+import { getAvailableMBTIDailyPages } from "@/lib/mbtiDailyContent";
 import { getSiteUrl } from "@/lib/seo";
 
 export const dynamic = "force-dynamic";
@@ -7,8 +7,8 @@ export const dynamic = "force-dynamic";
 export default function sitemap(): MetadataRoute.Sitemap {
   const siteUrl = getSiteUrl();
   const now = new Date();
-  const mbtiDailyPages = getAvailableMBTIDailyParams().map(({ type, date }) => ({
-    url: `${siteUrl}/mbti/${type}/daily/${date}`,
+  const mbtiDailyPages = getAvailableMBTIDailyPages().map(({ type, date, segment }) => ({
+    url: `${siteUrl}/mbti/${type}/daily/${segment}`,
     lastModified: new Date(`${date}T00:00:00.000Z`),
     changeFrequency: "daily" as const,
     priority: 0.8,

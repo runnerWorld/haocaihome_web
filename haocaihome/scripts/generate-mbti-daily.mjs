@@ -66,6 +66,10 @@ JSON 字段必须完全如下：
   "seo_title": "",
   "meta_description": "",
   "slug": "",
+  "title_zh": "",
+  "title_en": "",
+  "slug_zh": "",
+  "slug_en": "",
   "h1": "",
   "daily_theme": "",
   "hook": "",
@@ -114,7 +118,7 @@ JSON 字段必须完全如下：
 10. 不要声称百分百准确，不要制造恐惧。
 11. 不要给医疗、法律、投资保证。
 12. FAQ 至少 5 条，问题要像搜索问题，例如“${persona.mbti} 今天适合主动联系别人吗？”。
-13. slug 使用小写英文、数字和连字符。
+13. title_zh 写中文 SEO 标题，title_en 写自然英文标题；slug_en 根据 title_en 生成小写英文、数字和连字符，slug_zh 根据 title_zh 生成中文关键词和连字符，不要包含空格；slug 保持与 slug_en 相同。每日内容的 slug_en 要包含人格类型和自然日期词，避免不同日期重复。
 14. 避免 16 型人格内容模板化，每个类型要体现自身特点，也要体现今天有什么不同。
 15. 不要强行加入城市或地区词。
 `.trim();
@@ -206,7 +210,11 @@ async function main() {
       type: code,
       name,
       title: content.seo_title,
+      title_zh: content.title_zh,
+      title_en: content.title_en,
       slug: content.slug,
+      slug_zh: content.slug_zh,
+      slug_en: content.slug_en,
       file: `${code.toLowerCase()}.json`,
     });
 
