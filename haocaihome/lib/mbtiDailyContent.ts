@@ -1,6 +1,6 @@
 import { existsSync, readdirSync, readFileSync } from "node:fs";
 import path from "node:path";
-import type { DailyFortuneContent, DailyFortunePersona } from "@/lib/dailyFortune";
+import type { DailyFortuneContent, DailyFortuneEnglishContent, DailyFortunePersona } from "@/lib/dailyFortune";
 import { MBTI_TYPES, getMBTIType } from "@/lib/mbtiTypes";
 
 export type MBTIDailyRecord = {
@@ -8,6 +8,7 @@ export type MBTIDailyRecord = {
   locale: "zh-CN" | "zh-TW";
   persona: DailyFortunePersona;
   content: DailyFortuneContent;
+  content_en?: DailyFortuneEnglishContent;
   generated_at: string;
 };
 
@@ -68,6 +69,12 @@ export function getMBTIDailyUrl(type: string, record: MBTIDailyRecord) {
   const segment = getMBTIDailyCanonicalSlug(record);
 
   return `/mbti/${type.toLowerCase()}/daily/${segment}`;
+}
+
+export function getEnglishMBTIDailyUrl(type: string, record: MBTIDailyRecord) {
+  const segment = getMBTIDailyCanonicalSlug(record);
+
+  return `/en/mbti/${type.toLowerCase()}/daily/${segment}`;
 }
 
 export function getLatestMBTIDailyDate() {

@@ -62,6 +62,11 @@ export type DailyFortuneContent = {
   }>;
 };
 
+export type DailyFortuneEnglishContent = Omit<
+  DailyFortuneContent,
+  "slug" | "title_zh" | "title_en" | "slug_zh" | "slug_en" | "legacy_slugs" | "geo_keywords"
+>;
+
 type DeepSeekChatResponse = {
   choices?: Array<{
     message?: {

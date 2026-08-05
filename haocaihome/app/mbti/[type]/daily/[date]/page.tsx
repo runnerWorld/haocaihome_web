@@ -1,7 +1,9 @@
 import Link from "next/link";
 import { notFound, permanentRedirect } from "next/navigation";
+import LanguageSwitch from "@/components/LanguageSwitch";
 import {
   getAvailableMBTIDailyParams,
+  getEnglishMBTIDailyUrl,
   getMBTIDailyAdjacentDates,
   getMBTIDailyCanonicalSlug,
   getMBTIDailyRecord,
@@ -66,6 +68,7 @@ export async function generateMetadata({ params }: PageProps) {
   }
 
   const canonicalPath = getMBTIDailyUrl(type, record);
+  const englishPath = getEnglishMBTIDailyUrl(type, record);
 
   return {
     title: record.content.seo_title,
@@ -73,6 +76,10 @@ export async function generateMetadata({ params }: PageProps) {
     keywords: [...record.content.seo_keywords, mbtiType?.code, `${mbtiType?.code} 今日运势`, "MBTI 性格关联", "MBTI 每日分析"].filter(Boolean),
     alternates: {
       canonical: getAbsoluteUrl(canonicalPath),
+      languages: {
+        "zh-CN": getAbsoluteUrl(canonicalPath),
+        en: getAbsoluteUrl(englishPath),
+      },
     },
     openGraph: {
       title: record.content.seo_title,
@@ -162,13 +169,16 @@ export default async function MBTIDailyPage({ params }: PageProps) {
       <script type="application/ld+json" dangerouslySetInnerHTML={jsonLdScript(faqJsonLd)} />
       <article className="mx-auto max-w-4xl">
         <div className="mb-8 flex flex-wrap items-center gap-4 text-sm">
-          <Link href="/" className="font-medium text-arcana-gray hover:text-arcana-gold">
-            首页
-          </Link>
-          <span className="text-arcana-gray-dark">/</span>
-          <Link href="/mbti" className="font-medium text-arcana-gray hover:text-arcana-gold">
-            MBTI 今日运势
-          </Link>
+          <div className="flex flex-wrap items-center gap-4">
+            <Link href="/" className="font-medium text-arcana-gray hover:text-arcana-gold">
+              首页
+            </Link>
+            <span className="text-arcana-gray-dark">/</span>
+            <Link href="/mbti" className="font-medium text-arcana-gray hover:text-arcana-gold">
+              MBTI 今日运势
+            </Link>
+          </div>
+          <LanguageSwitch current="zh" zhHref={canonicalPath} enHref={getEnglishMBTIDailyUrl(mbtiType.code, record)} />
         </div>
 
         <header className="mb-8">

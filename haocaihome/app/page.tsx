@@ -8,6 +8,7 @@ import GlowOrb from '@/components/GlowOrb';
 import ArcanaIcon from '@/components/ArcanaIcon';
 import SectionTitle from '@/components/SectionTitle';
 import FAQItem from '@/components/FAQItem';
+import LanguageSwitch from '@/components/LanguageSwitch';
 
 const RainbowIcon = () => (
   <svg viewBox="0 0 24 24" className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth="1.6">
@@ -224,6 +225,7 @@ export default function Home() {
           <a href={appStoreUrl} onClick={openAppStore} className="rounded-full bg-arcana-gold px-4 py-2 text-sm font-semibold text-white shadow-md shadow-arcana-gold/20">
             下载 App
           </a>
+          <LanguageSwitch current="zh" zhHref="/" enHref="/en/mbti" />
         </nav>
       </header>
 

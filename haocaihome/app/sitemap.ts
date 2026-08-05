@@ -13,6 +13,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     changeFrequency: "daily" as const,
     priority: 0.8,
   }));
+  const englishMBTIDailyPages = getAvailableMBTIDailyPages().map(({ type, date, segment }) => ({
+    url: `${siteUrl}/en/mbti/${type}/daily/${segment}`,
+    lastModified: new Date(`${date}T00:00:00.000Z`),
+    changeFrequency: "daily" as const,
+    priority: 0.75,
+  }));
 
   return [
     {
@@ -27,6 +33,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "daily",
       priority: 0.9,
     },
+    {
+      url: `${siteUrl}/en/mbti`,
+      lastModified: now,
+      changeFrequency: "daily",
+      priority: 0.85,
+    },
     ...mbtiDailyPages,
+    ...englishMBTIDailyPages,
   ];
 }
